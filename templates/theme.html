@@ -1,0 +1,342 @@
+{% load static %}
+{% load cart_tags %}
+
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Bookworm | The Complete Book Store</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="{% static 'theme/fav-icon.png' %}">
+	<link rel="apple-touch-icon" href="{% static 'theme/fav-icon.png' %}">
+
+	<!-- Google font (font-family: 'Roboto', sans-serif; Poppins ; Satisfy) -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,300i,400,400i,500,600,600i,700,700i,800"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{% static 'theme/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'theme/css/plugins.css' %}">
+	<link rel="stylesheet" href="{% static 'theme/style.css' %}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<!-- Cusom css -->
+	<link rel="stylesheet" href="{% static 'theme/css/custom.css' %}">
+
+	<!-- Modernizer js -->
+	<script src="{% static 'theme/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+	<![endif]-->
+
+	<!-- Main wrapper -->
+	<div class="wrapper" id="wrapper">
+		<!-- Header -->
+		<header id="wn__header" class="header__area header__absolute sticky__header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-6 col-sm-6 col-6 col-lg-2">
+						<div class="logo">
+							<a href="{% url 'home' %}">
+								<img src="{% static 'theme/logo.png' %}" alt="logo images">
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-5 d-none d-lg-block">
+						<nav class="mainmenu__nav">
+							<ul class="meninmenu d-flex justify-content-start">
+								<li class="drop with--one--item"><a href="{% url 'home' %}">Home</a>
+								</li>
+								<li class="drop"><a href="{% url 'books' %}">Books</a>
+			
+								<li class="drop"><a href="#">Bundle Offer</a>
+									
+								</li>
+								<li><a href="contact.html">Contact</a></li>
+							</ul>
+						</nav>
+					</div>
+					<div class="col-md-6 col-sm-6 col-6 col-lg-5">
+						<ul class="header__sidebar__right d-flex justify-content-end align-items-center">
+							<form action="{% url 'search' %}" method="GET">
+							<div class="input-group">
+								<input class="form-control border-end-0 border-5 rounded-pill" name='keyword' type="text" placeholder="Search Books" id="example-search-input">
+								<span class="input-group-append">
+									<button type='submit' class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3" type="button">
+										<i class="fa fa-search"></i>
+									</button>
+								</span>
+							</div>
+							</form>
+							<!-- {# 
+							{% if request.user.is_authenticated %}
+																
+							<li class="m-5"><i class="setting__bar__icon"></i><a class="" href="{% url 'logout' %}">Logout</a></li>
+							{% else %}
+							<li class="m-5"><i class="setting__bar__icon"></i><a class="" href="{% url 'login' %}">Login</a></li>
+							{% endif %}
+							#} -->
+							
+							<li class="wishlist"><a href="#"></a></li>
+							<li class="shopcart"><a class="cartbox_active" href="#"><span
+										class="product_qun">
+											{% show_cart_items as cart_items %}
+											{{ cart_items|length }}
+										</span></a>
+								<!-- Start Shopping Cart -->
+								<div class="block-minicart minicart__active">
+									<div class="minicart-content-wrapper">
+										<div class="micart__close">
+											<span>close</span>
+										</div>
+										<div class="items-total d-flex justify-content-between">
+											<span>items</span>
+											<span>Cart Subtotal</span>
+										</div>
+										<div class="total_amount text-right">
+											<span>$66.00</span>
+										</div>
+										<div class="mini_action checkout">
+											<a class="checkout__btn" href="cart.html">Go to Checkout</a>
+										</div>
+										
+
+										<div class="single__items">
+											<div class="miniproduct">
+												
+													{% for items in cart_item %}
+													
+
+												<div class="item01 d-flex">
+													<div class="thumb">
+														<a href="product-details.html"><img
+																src="{{items.book.image.first.url.url}}"
+																alt="product images"></a>
+													</div>
+													<div class="content">
+														<h6><a href="product-details.html">{{items.book.title}}</a></h6>
+														<span class="prize">{{items.book.price}}</span>
+														<div class="product_prize d-flex justify-content-between">
+															<span class="qun">Qty: 01</span>
+															<ul class="d-flex justify-content-end">
+																<li><a href="#"><i class="zmdi zmdi-settings"></i></a>
+																</li>
+																<li><a href="#"><i class="zmdi zmdi-delete"></i></a>
+																</li>
+															</ul>
+														</div>
+													</div>
+												</div>
+												{% endfor %}
+											
+													
+											</div>
+										</div>
+										<div class="mini_action cart">
+											<a class="cart__btn" href="cart.html">View and edit cart</a>
+										</div>
+									</div>
+								</div>
+								<!-- End Shopping Cart -->
+							</li>
+							<li class="setting__bar__icon"><a class="setting__active" href="#"></a>
+								<div class="searchbar__content setting__block">
+									<div class="content-inner">
+										<div class="switcher-currency">
+											<strong class="label switcher-label">
+												<a href=""><span>Currency</span></a>
+											</strong>
+											<div class="switcher-options">
+												<div class="switcher-currency-trigger">
+													<span class="currency-trigger">USD - US Dollar</span>
+													<ul class="switcher-dropdown">
+														<li>GBP - British Pound Sterling</li>
+														<li>EUR - Euro</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="switcher-currency">
+											<strong class="label switcher-label">
+												<span>Language</span>
+											</strong>
+											<div class="switcher-options">
+												<div class="switcher-currency-trigger">
+													<span class="currency-trigger">English01</span>
+													<ul class="switcher-dropdown">
+														<li>English02</li>
+														<li>English03</li>
+														<li>English04</li>
+														<li>English05</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="switcher-currency">
+											<strong class="label switcher-label">
+												<span>Select Store</span>
+											</strong>
+											<div class="switcher-options">
+												<div class="switcher-currency-trigger">
+													<span class="currency-trigger">Fashion Store</span>
+													<ul class="switcher-dropdown">
+														<li>Furniture</li>
+														<li>Shoes</li>
+														<li>Speaker Store</li>
+														<li>Furniture</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="switcher-currency">
+											<strong class="label switcher-label">
+												<span>My Account</span>
+											</strong>
+											<div class="switcher-options">
+												<div class="switcher-currency-trigger">
+													<div class="setting__menu">
+														<span><a href="#">Compare Product</a></span>
+														<span><a href="{% url 'profile' %}">My Account</a></span>
+														<span><a href="#">My Wishlist</a></span>
+														<span><a href="{% url 'login' %}">Sign In</a></span>
+														<span><a href="{% url 'register' %}">Create An Account</a></span>
+														<span><a href="{% url 'logout' %}">Logout</a></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- Start Mobile Menu -->
+				<div class="row d-none">
+					<div class="col-lg-12 d-none">
+						<nav class="mobilemenu__nav">
+							<ul class="meninmenu">
+								<li><a href="index.html">Home</a>
+									
+								</li>
+								<li><a href="#">Pages</a>
+									
+								</li>
+								<li><a href="shop-grid.html">Shop</a>
+									
+								</li>
+								
+								<li><a href="contact.html">Contact</a></li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+				<!-- End Mobile Menu -->
+				<div class="mobile-menu d-block d-lg-none">
+				</div>
+				<!-- Mobile Menu -->
+			</div>
+		</header>
+		<!-- //Header -->
+		<!-- Start Search Popup -->
+		<div class="brown--color box-search-content search_active block-bg close__top">
+			<form id="search_mini_form" class="minisearch" action="#">
+				<div class="field__search">
+					<input type="text" placeholder="Search entire store here...">
+					<div class="action">
+						<a href="#"><i class="zmdi zmdi-search"></i></a>
+					</div>
+				</div>
+			</form>
+			<div class="close__wrap">
+				<span>close</span>
+			</div>
+		</div>
+		<!-- End Search Popup -->
+
+
+		{% block 'content' %}
+			
+		{% endblock 'content' %}
+
+
+		<!-- Footer Area -->
+		<footer id="wn__footer" class="footer__area bg__cat--8 brown--color">
+			<div class="footer-static-top">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="footer__widget footer__menu">
+								<div class="ft__logo">
+									<a href="index.html">
+										<img src="{% static 'theme/logo.png' %}" alt="logo">
+									</a>
+									
+								</div>
+								<div class="footer__content">
+									<ul class="social__net social__net--2 d-flex justify-content-center">
+										<li><a href="#"><i class="bi bi-facebook"></i></a></li>
+										<li><a href="#"><i class="bi bi-google"></i></a></li>
+										<li><a href="#"><i class="bi bi-twitter"></i></a></li>
+										<li><a href="#"><i class="bi bi-linkedin"></i></a></li>
+										<li><a href="#"><i class="bi bi-youtube"></i></a></li>
+									</ul>
+									<ul class="mainmenu d-flex justify-content-center">
+										<li><a href="index.html">Trending</a></li>
+										<li><a href="index.html">Best Seller</a></li>
+										<li><a href="index.html">All Product</a></li>
+										<li><a href="index.html">Wishlist</a></li>
+										<li><a href="index.html">Blog</a></li>
+										<li><a href="index.html">Contact</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="copyright__wrapper">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-6 col-md-6 col-sm-12">
+							<div class="copyright">
+								<div class="copy__right__inner text-left">
+									<p>Copyright <i class="fa fa-copyright"></i> <a href="#">Bookworm.</a> All Rights
+										Reserved</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-12">
+							<div class="payment text-right">
+								<img src="{% static 'theme/images/icons/payment.png' %}" alt="" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- //Footer Area -->
+		
+	</div>
+	<!-- //Main wrapper -->
+
+	<!-- JS Files -->
+	<script src="{% static 'theme/js/vendor/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'theme/js/popper.min.js' %}"></script>
+	<script src="{% static 'theme/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'theme/js/plugins.js' %}"></script>
+	<script src="{% static 'theme/js/active.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+def verify_otp_view(request):
+    if request.method == 'POST':
+        otp = request.POST['otp']
+        if 'otp' in request.session and otp == request.session['otp']:
+            email = request.session['email']
+            user = authenticate(request, email=email)
+            if user is not None:
+                # Log the user in
+                login(request, user)
+                # Clear the OTP from the session
+                del request.session['otp']
+                del request.session['email']
+                return redirect('home')
+            else:
+                return render(request, 'verify_otp.html', {'error': 'Invalid email'})
+        else:
+            return render(request, 'verify_otp.html', {'error': 'Invalid OTP'})
+    return render(request, 'verify_otp.html')

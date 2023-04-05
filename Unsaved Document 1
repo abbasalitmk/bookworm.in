@@ -1,0 +1,96 @@
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True')
+
+        return self.create_user(email, password, **extra_fields)
+
+class CustomUser(AbstractBaseUser):
+    email = models.EmailField(unique=True)
+    otp = models.CharField(max_length=6, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import CustomUser
+
+def register(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = CustomUser.objects.create_user(email=email, password=password)
+        send_otp(user)
+        return redirect('verify-otp', user_id=user.id)
+    return render(request, 'registration.html')
+
+def send_otp(user):
+    otp = generate_otp()
+    user.otp = otp
+    user.save()
+    subject = 'Email verification'
+    message = f'Your OTP for email verification is {otp}'
+    from_email = settings.EMAIL_HOST_USER
+    to_list = [user.email,]
+    send_mail(subject, message, from_email, to_list, fail_silently=False)
+
+def generate_otp():
+    # Generate a 6-digit OTP
+    return str(random.randint(100000, 999999))
+
+def verify_otp(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    if request.method == 'POST':
+        otp = request.POST['otp']
+        if otp == user.otp:
+            user.is_active = True
+            user.save()
+            return redirect('login')
+    return render(request, 'verify_otp.html')
+
+def user_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return
+

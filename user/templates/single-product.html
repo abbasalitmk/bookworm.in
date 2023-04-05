@@ -1,0 +1,342 @@
+﻿{% extends 'theme.html' %}
+{% load static %}
+{% block 'content' %}
+
+<!-- Start Bradcaump area -->
+<div id="carouselExampleIndicators" class="carousel slide" style='margin-top:13vh' data-ride="carousel">
+	<ol class="carousel-indicators">
+		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+		<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+	</ol>
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<img class="d-block w-100" src="{% static 'theme/images/banner5.jpg' %}" alt="First slide">
+		</div>
+		<div class="carousel-item">
+			<img class="d-block w-100" src="{% static 'theme/images/banner6.jpg' %}" alt="Second slide">
+		</div>
+		<div class="carousel-item">
+			<img class="d-block w-100" src="{% static 'theme/images/banner3.jpg' %}" alt="Third slide">
+		</div>
+	</div>
+	<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="sr-only">Previous</span>
+	</a>
+	<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="sr-only">Next</span>
+	</a>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="bradcaump__inner text-center">
+				<nav class="bradcaump-content">
+					<a class="breadcrumb_item" href="{% url 'books' %}">Books</a>
+					<span class="brd-separetor">/</span>
+					<span class="breadcrumb_item active">Shop Single</span>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- End Bradcaump area -->
+<!-- Start main Content -->
+<div class="maincontent bg--white pt--80 pb--55">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 col-12">
+				<div class="wn__single__product">
+
+					<div class="row">
+						<div class="col-lg-6 col-12">
+							<div class="wn__fotorama__wrapper">
+								<div class="fotorama wn__fotorama__action" data-nav="thumbs">
+
+									{% for image in books.image.all %}
+
+									<a href="1.jpg"><img src="{{image.url.url}}" alt=""></a>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-12">
+							<div class="product__info__main">
+								<h1>{{books.title}}</h1>
+								<div class="product-info-stock-sku d-flex">
+									<p>Availability:<span> In stock</span></p>
+									<p>SKU:<span> MH01</span></p>
+								</div>
+								<div class="product-reviews-summary d-flex">
+									<ul class="rating-summary d-flex">
+										<li><i class="zmdi zmdi-star-outline"></i></li>
+										<li><i class="zmdi zmdi-star-outline"></i></li>
+										<li><i class="zmdi zmdi-star-outline"></i></li>
+										<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
+										<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
+									</ul>
+									<div class="reviews-actions d-flex">
+										<a href="#">(1 Review)</a>
+										<a href="#">Add Your Review</a>
+									</div>
+								</div>
+								<div class="price-box">
+									<span>Rs. {{ books.price}}</span>
+								</div>
+								<div class="product-color-label">
+									<span>Color</span>
+									<div class="color__attribute d-flex">
+										<div class="swatch-option color"
+											style="background: #000000 no-repeat center; background-size: initial;">
+										</div>
+										<div class="swatch-option color"
+											style="background: #8f8f8f no-repeat center; background-size: initial;">
+										</div>
+									</div>
+								</div>
+								<div class="box-tocart d-flex">
+									<span>Qty</span>
+									<input id="qty" class="input-text qty" name="qty" min="1" value="1" title="Qty"
+										type="number">
+									<div class="addtocart__actions">
+										{% if in_cart %}
+											<a href="{% url 'cart'%}"><button class="tocart" style="background-color: green;" type="submit" title="Go to Cart">Added to Cart</button></a>
+										{% else %}
+											<a href="{% url 'add_cart' books.id %}"><button class="tocart" type="submit" title="Add to Cart">Add to Cart</button></a>
+										{% endif %}
+									</div>
+								</div>
+								<div class="product-addto-links clearfix">
+									<a class="wishlist" href="#"></a>
+									<a class="compare" href="#"></a>
+									<a class="email" href="#"></a>
+								</div>
+								<div class="product__overview">
+									<p>{{books.description}}</p>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="product__info__detailed">
+					<div class="pro_details_nav nav justify-content-start" role="tablist">
+						<a class="nav-item nav-link active" data-toggle="tab" href="#nav-details" role="tab">Details</a>
+						<a class="nav-item nav-link" data-toggle="tab" href="#nav-review" role="tab">Reviews</a>
+					</div>
+					<div class="tab__container">
+						<!-- Start Single Tab Content -->
+						<div class="pro__tab_label tab-pane fade show active" id="nav-details" role="tabpanel">
+							<div class="description__attribute">
+								<p>{{books.description}}</p>
+
+							</div>
+						</div>
+						<!-- End Single Tab Content -->
+						<!-- Start Single Tab Content -->
+						<div class="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
+							<div class="review__attribute">
+								<h1>Customer Reviews</h1>
+								<h2>Hastech</h2>
+								<div class="review__ratings__type d-flex">
+									<div class="review-ratings">
+										<div class="rating-summary d-flex">
+											<span>Quality</span>
+											<ul class="rating d-flex">
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+
+										<div class="rating-summary d-flex">
+											<span>Price</span>
+											<ul class="rating d-flex">
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+										<div class="rating-summary d-flex">
+											<span>value</span>
+											<ul class="rating d-flex">
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+									</div>
+									<div class="review-content">
+										<p>Hastech</p>
+										<p>Review by Hastech</p>
+										<p>Posted on 11/6/2018</p>
+									</div>
+								</div>
+							</div>
+							<div class="review-fieldset">
+								<h2>You're reviewing:</h2>
+								<h3>Chaz Kangeroo Hoodie</h3>
+								<div class="review-field-ratings">
+									<div class="product-review-table">
+										<div class="review-field-rating d-flex">
+											<span>Quality</span>
+											<ul class="rating d-flex">
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+										<div class="review-field-rating d-flex">
+											<span>Price</span>
+											<ul class="rating d-flex">
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+										<div class="review-field-rating d-flex">
+											<span>Value</span>
+											<ul class="rating d-flex">
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+												<li class="off"><i class="zmdi zmdi-star"></i></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="review_form_field">
+									<div class="input__box">
+										<span>Nickname</span>
+										<input id="nickname_field" type="text" name="nickname">
+									</div>
+									<div class="input__box">
+										<span>Summary</span>
+										<input id="summery_field" type="text" name="summery">
+									</div>
+									<div class="input__box">
+										<span>Review</span>
+										<textarea name="review"></textarea>
+									</div>
+									<div class="review-form-actions">
+										<button>Submit Review</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- End Single Tab Content -->
+					</div>
+				</div>
+				<div class="wn__related__product pt--80 pb--50">
+					<div class="section__title text-center">
+						<h2 class="title__be--2">Related Products</h2>
+					</div>
+					<div class="row mt--60">
+						<div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
+							<!-- Start Single Product -->
+						
+						</div>
+					</div>
+				</div>
+				<div class="wn__related__product">
+
+					<div class="row mt--60">
+						<div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
+							<!-- Start Single Product -->
+							<div class="col-lg-4 col-md-4 col-sm-6 col-12">
+								<div class="product">
+									<div class="product__thumb">
+										<a class="first__img" href="single-product.html"><img src="images/product/2.jpg"
+												alt="product image"></a>
+										<a class="second__img animation1" href="single-product.html"><img
+												src="images/product/1.jpg" alt="product image"></a>
+										<div class="new__box">
+											<span class="new-label">New</span>
+										</div>
+										<ul class="prize position__right__bottom d-flex">
+											<li>$35.00</li>
+											<li class="old_prize">$38.00</li>
+										</ul>
+										<div class="action">
+											<div class="actions_inner">
+												<ul class="add_to_links">
+													<li><a class="cart" href="cart.html"></a></li>
+													<li><a class="wishlist" href="wishlist.html"></a></li>
+													<li><a class="compare" href="compare.html"></a></li>
+													<li><a data-toggle="modal" title="Quick View"
+															class="quickview modal-view detail-link"
+															href="#productmodal"></a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="product__content">
+										<h4><a href="single-product.html">Crown Summit Backpack</a></h4>
+										<ul class="rating d-flex">
+											<li class="on"><i class="fa fa-star-o"></i></li>
+											<li class="on"><i class="fa fa-star-o"></i></li>
+											<li class="on"><i class="fa fa-star-o"></i></li>
+											<li><i class="fa fa-star-o"></i></li>
+											<li><i class="fa fa-star-o"></i></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<!-- Start Single Product -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-12 md-mt-40 sm-mt-40">
+				<div class="shop__sidebar">
+					<aside class="wedget__categories poroduct--cat">
+						<h3 class="wedget__title">Product Categories</h3>
+						<ul>
+							<li><a href="#">Biography <span>(3)</span></a></li>
+							<li><a href="#">Business <span>(4)</span></a></li>
+							<li><a href="#">Cookbooks <span>(6)</span></a></li>
+							<li><a href="#">Health & Fitness <span>(7)</span></a></li>
+							<li><a href="#">History <span>(8)</span></a></li>
+							<li><a href="#">Mystery <span>(9)</span></a></li>
+							<li><a href="#">Inspiration <span>(13)</span></a></li>
+							<li><a href="#">Romance <span>(20)</span></a></li>
+
+						</ul>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End main Content -->
+<!-- Start Search Popup -->
+<div class="box-search-content search_active block-bg close__top">
+	<form id="search_mini_form--2" class="minisearch" action="#">
+		<div class="field__search">
+			<input type="text" placeholder="Search entire store here...">
+			<div class="action">
+				<a href="#"><i class="zmdi zmdi-search"></i></a>
+			</div>
+		</div>
+	</form>
+	<div class="close__wrap">
+		<span>close</span>
+	</div>
+</div>
+<!-- End Search Popup -->
+{% endblock 'content' %}

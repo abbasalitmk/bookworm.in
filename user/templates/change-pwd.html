@@ -1,0 +1,41 @@
+{% extends 'theme.html' %}
+
+{% block 'content' %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="row m-5">
+        <div class="col-md-5 card p-5 d-flex mx-auto">
+            <h4 class="text-center mb-2">Change Password</h4>
+
+            {% if messages %}
+
+            {% for message in messages %}
+            <p class="text-danger">{{message}}</p>
+            {% endfor %}
+
+
+            {% endif %}
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input type="password" name="current-pwd" class="form-control" placeholder="Current Password" />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" name="new-pwd" class="form-control" placeholder="New Password" />
+            </div>
+
+            <div class="form-outline mb-4">
+                <input type="password" name="confirm-pwd" class="form-control" placeholder="Confirm Password" />
+            </div>
+
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-success btn-block mb-4">Update</button>
+
+</form>
+</div>
+</div>
+
+{% endblock 'content' %}
