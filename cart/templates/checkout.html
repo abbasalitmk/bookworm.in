@@ -1,0 +1,220 @@
+﻿{% extends 'theme.html' %}
+{% block 'content' %}
+
+<!-- Start Checkout Area -->
+<section class="wn__checkout__area section-padding--lg bg__white" style="margin-top: 10vh;">
+	<div class="container">
+		<form action="{% url 'coupon' %}" method="GET">
+
+		<div class="row">
+			<div class="col-lg-12">
+				
+				<div class="wn_checkout_wrap">
+						
+					<div class="checkout_info">
+						<span style="font-size: 1.2rem;">Have a coupon? </span>
+						<a class="showcoupon" href="#">Click here to enter your code</a>
+								{% if messages %}
+							
+								{% for message in messages %}
+									
+										<script>
+											toastr["{{message.tags}}"]("{{message}}");
+										</script>
+							
+								{% endfor %}
+								
+								{% endif %}
+					</div>
+					<div class="checkout_coupon">
+							<div class="form__coupon">
+								<input type="text" name='coupon-text' placeholder="Coupon code">
+								<button type="submit">Apply coupon</button>
+							</div>
+						</div>
+				</div>
+			</div>
+			</form>
+
+		</div>
+		
+
+			
+		<form action="{% url 'place_order' %}" method="POST">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-lg-6 col-12">
+					<div class="customer_details">
+						<h3>Select Address</h3>
+
+						<div class="form-check">
+						
+							{% for address in addresses  %}
+							<input class="form-check-input" type="radio" name="address" id="address" value="{{address.id}}">
+								<div class="card border-default mb-3" style="max-width: 40rem; max-height: 8rem;">
+									<div class="card-body text-default">
+										<p>{{address.address_line1}}</p>
+										<p>{{address.address_line2}}</p>
+										<p>{{address.city}}, {{address.pincode}}, {{address.state}}</p>
+
+										<p>{{address.phone}}</p>
+					
+									</div>
+								</div>
+							
+							{% endfor %}
+
+						</div>
+			
+							<div class="card mt-3">
+								<h5 class="card-header">Payment Method</h5>
+								<div class="card-body">
+									<div class="form-check">
+										<h6><label class="form-check-label" for="radio1">
+												<input type="radio" class="form-check-input" id="radio1" name="payment_method" value="online"
+													checked>Credit/Debit Card, UPI, Net Banking
+											</h6>
+									</div>
+									<div class="form-check">
+										<h6><label class="form-check-label" for="radio2">
+												<input type="radio" class="form-check-input" id="radio2" name="payment_method" value="cod">Cash
+												on Delivery
+											</label></h6>
+									</div>
+								</div>
+							</div>
+						</form>
+
+						
+							
+							
+<!-- 								
+
+
+						<div class="customar__field">
+							<div class="margin_between">
+								<div class="input_box space_between">
+									<label>First name <span>*</span></label>
+									<input type="text" name="first_name">
+								</div>
+								<div class="input_box space_between">
+									<label>last name <span>*</span></label>
+									<input type="text" name="last_name">
+								</div>
+							</div>
+
+							<div class="input_box">
+								<label>Address <span>*</span></label>
+								<input type="text" name='address_line1' placeholder="Street address">
+							</div>
+							<div class="input_box">
+								<input type="text" name='address_line2'
+									placeholder="Apartment, suite, unit etc. ">
+							</div>
+							<div class="input_box">
+								<input type="text" name='country' placeholder="Country">
+							</div>
+							<div class="input_box">
+								<input type="text" name='state' placeholder="state">
+							</div>
+							<div class="input_box">
+								<label>District<span>*</span></label>
+								<select class="select__option" name="city">
+									<option>Select a District</option>
+									<option value="Alappuzha">Alappuzha</option>
+									<option value="Ernakulam">Ernakulam</option>
+									<option value="Idukki">Idukki</option>
+									<option value="Kannur">Kannur</option>
+									<option value="Kasaragod">Kasaragod</option>
+									<option value="Kollam">Kollam</option>
+									<option value="Kottayam">Kottayam</option>
+									<option value="Kozhikode">Kozhikode</option>
+									<option value="Malappuram">Malappuram</option>
+									<option value="Palakkad">Palakkad</option>
+									<option value="Pathanamthitta">Pathanamthitta</option>
+									<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+									<option value="Thrissur">Thrissur</option>
+									<option value="Wayanad">Wayanad</option>
+								</select>
+							</div>
+							<div class="input_box">
+								<label>Postcode / ZIP <span>*</span></label>
+								<input type="text" name="pincode">
+							</div>
+							<div class="margin_between">
+								<div class="input_box space_between">
+									<label>Phone <span>*</span></label>
+									<input type="text" name="phone">
+								</div>
+
+								<div class="input_box space_between">
+									<label>Email address <span>*</span></label>
+									<input type="email" name="email">
+								</div>
+							</div>
+						</div>-->
+
+					</div> 
+				
+				</div>
+
+				<div class="col-lg-6 col-12 md-mt-40 sm-mt-40">
+					<div class="wn__order__box">
+						<h3 class="onder__title">Your order</h3>
+						<ul class="order__total">
+							<li>Product</li>
+							<li>Total</li>
+						</ul>
+						<ul class="order_product">
+							{% for items in cart_item %}
+
+							<li class="text-danger">{{items.book.title}} ×
+								{{items.quantity}}<span>{{items.book.price}}</span></li>
+							<li class="text-muted">
+								{% for variation_item in items.variations.all %}
+								{{variation_item.variation_category}} :
+								{{variation_item.variation_value}} <br />
+								{% endfor %}
+
+							</li>
+							{% endfor %}
+
+						</ul>
+						<ul class="shipping__method">
+							<li>Cart Subtotal <span>{{sub_total}}</span></li>
+							<li>Shipping<span>{{delivery_charge}}</span></li>
+						</ul>
+
+
+						<ul class="shipping__method">
+							<li>GST<span>{{gst}}</span></li>
+						</ul>
+						{% if coupon_discount %}
+												
+						<ul class="shipping__method">
+							<li class="text-success"> Coupon Discount<span>₹{{coupon_discount}}</span></li>
+						</ul>
+						{% endif %}
+
+						<ul class="total__amount">
+							<li>Order Total <span>₹{{grand_total}}</span></li>
+						</ul>
+
+					</div>
+					<div class="mt-5">
+						<button type="submit" class="btn btn-success">Place Order</button>
+						<a class='btn btn-primary text-white' href="{% url 'cart' %}">Go to cart</a>
+
+					</div>
+					
+					
+
+		</form>
+
+	</div>
+	</div>
+	</div>
+
+</section>
+<!-- End Checkout Area -->
+{% endblock 'content' %}

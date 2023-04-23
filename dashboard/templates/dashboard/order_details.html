@@ -1,0 +1,187 @@
+{% extends 'dashboard/base.html' %}
+
+{% block 'content' %}
+
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="container">
+            <!-- Title -->
+            <div class="d-flex justify-content-between align-items-center py-3">
+                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #{{order.first.order_number}}</h2>
+            </div>
+
+            <!-- Main content -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Details -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-3 d-flex justify-content-between">
+                                <div>
+                                    <span class="me-3">Date: {{order.first.created_at}}</span>
+                                    <span class="badge rounded-pill bg-info">{{order.first.status}}</span>
+
+                                </div>
+
+                            </div>
+                            <table class="table table-borderless">
+                                <tbody>
+
+                                    {% for item in order_products %}
+
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex mb-2">
+                                                <div class="flex-shrink-0">
+                                                    <img src="{{item.book.image.first.url.url}}" class="img-fluid"
+                                                        style="width: 50px; " alt="...">
+
+                                                </div>
+                                                <div class="flex-lg-grow-1 ms-3">
+                                                    <h6 class="small mb-0"><a href="#"
+                                                            class="text-reset">{{item.book.title}}</a>
+                                                    </h6>
+                                                    <span class="small">Type:
+                                                        {{item.variations.first.variation_value}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>1</td>
+                                        <td class="text-end">{{item.order.order_total}}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <!-- <td colspan="2">Subtotal</td>
+                                    <td class="text-end">{{item.payment.first.amount_paid}}</td> -->
+                                    </tr>
+                                    <tr>
+                                        <!-- <td colspan="2">Shipping</td>
+                                    <td class="text-end">$20.00</td> -->
+                                    </tr>
+                                    <tr>
+                                        <!-- <td colspan="2">Discount (Code: NEWYEAR)</td>
+                                    <td class="text-danger text-end">-$10.00</td> -->
+                                    </tr>
+                                    <tr class="fw-bold">
+                                        <td colspan="2">TOTAL</td>
+                                        <td class="text-end">{{order.first.order_total}}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Payment -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h3 class="h6">Payment Method</h3>
+                                    <p>Payment Gateway <br>
+                                        <span class="badge bg-success rounded-pill">PAID</span>
+                                    </p>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3 class="h6">Billing address</h3>
+                                    <address>
+
+                                        {% for item in order %}
+
+
+                                        <strong>{{item.fullname}}</strong><br>
+                                        {{item.address_line1}}<br>
+                                        {{item.address_line2}}<br>
+                                        Pincode: {{item.pincode}}<br>
+                                        {{item.city}}<br>
+                                        {{item.phone}}<br>
+                                        {{item.email}}<br>
+                                        {% endfor %}
+
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Customer Notes -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="h6">Customer Notes</h3>
+                            <p>Sed enim, faucibus litora velit vestibulum habitasse. Cras lobortis cum sem aliquet
+                                mauris
+                                rutrum. Sollicitudin. Morbi, sem tellus vestibulum porttitor.</p>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <!-- Shipping information -->
+                        <div class="card-body">
+                          
+                            <h3 class="h6">Address</h3>
+                            <address>
+
+                                {% for item in order %}
+
+
+                                <strong>{{item.fullname}}</strong><br>
+                                {{item.address_line1}}<br>
+                                {{item.address_line2}}<br>
+                                Pincode: {{item.pincode}}<br>
+                                {{item.city}}<br>
+                                {{item.phone}}<br>
+                                {{item.email}}<br>
+                                {% endfor %}
+
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<style>
+    body {
+        background: #eee;
+    }
+
+    .card {
+        box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0, 0, 0, .125);
+        border-radius: 1rem;
+    }
+
+    .text-reset {
+        --bs-text-opacity: 1;
+        color: inherit !important;
+    }
+
+    a {
+        color: #5465ff;
+        text-decoration: none;
+    }
+</style>
+
+{% endblock 'content' %}

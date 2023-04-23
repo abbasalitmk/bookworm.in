@@ -5,10 +5,14 @@ from django.contrib.auth import authenticate
 from accounts.models import CustomUser as User
 from django.contrib import messages
 from django.db.models import Count
-from dashboard.models import Book, Image, Author, Category
-from cart.models import Cart, CartItem
+from dashboard.models import Book, Image, Author, Book_Category
+from order.models import Order, Payment, OrderProduct
+from cart.models import Cart, CartItem, Wishlist
 from cart.views import _cart_id
 from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
+from .models import Address
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 
 def home(request):
@@ -19,35 +23,70 @@ def home(request):
 
 def list_book(request,):
     # books = Book.objects.filter(category__cat_name=cat_name)
-    books = Book.objects.all().order_by('id')
+    sort = request.GET.get('sort')
+    if sort == 'latest':
+        books = Book.objects.all().order_by('publishing_date')
+    elif sort == 'price-low':
+        books = Book.objects.all().order_by('price')
+    elif sort == 'price-high':
+        books = Book.objects.all().order_by('-price')
+    elif sort == 'name':
+        books = Book.objects.all().order_by('title')
+    elif sort == 'default':
+        books = Book.objects.all().order_by('id')
+    else:
+        books = Book.objects.all().order_by('id')
+
     paginator = Paginator(books, 6)
     page = request.GET.get('page')
     paged_product = paginator.get_page(page)
+    book_count = books.count()
 
-    category = Category.objects.values(
-        'cat_name').annotate(book_count=Count('book'))
+    categories = Book_Category.objects.annotate(
+        num_books=Count('books')).values('name', 'num_books')
 
     context = {
         'books': paged_product,
-        'category': category
+        'category': categories,
+        'book_count': book_count
+
     }
     return render(request, 'books.html', context)
 
 
 def category_list(request, cat_name, min_price=None, max_price=None):
-    if min_price and max_price:
+
+    if min_price or max_price:
 
         books = Book.objects.filter(
-            category__cat_name=cat_name, price__gte=min_price, price__lte=max_price)
+            category__name=cat_name, price__gte=min_price, price__lte=max_price)
     else:
-        books = Book.objects.filter(category__cat_name=cat_name)
+        books = Book.objects.filter(category__name=cat_name)
 
-    category = Category.objects.values(
-        'cat_name').annotate(book_count=Count('book'))
+    category = Book_Category.objects.values(
+        'name').annotate(book_count=Count('book'))
 
     context = {
         'books': books,
         'category': category
+    }
+    return render(request, 'books.html', context)
+
+
+def filter_price(request):
+    if request.method == 'GET':
+        min_price = request.GET['min-price']
+        max_price = request.GET['max-price']
+
+        if min_price or max_price:
+
+            books = Book.objects.filter(
+                price__gte=min_price, price__lte=max_price)
+        else:
+            books = Book.objects.all()
+
+    context = {
+        'books': books,
     }
     return render(request, 'books.html', context)
 
@@ -63,11 +102,6 @@ def book_details(request, title):
 
     }
     return render(request, 'single-product.html', context)
-
-
-@login_required(login_url='login')
-def profile(request):
-    return render(request, 'profile.html')
 
 
 @ login_required(login_url='login')
@@ -105,3 +139,30 @@ def searchBook(request):
 
     }
     return render(request, 'books.html', context)
+
+
+@login_required(login_url='login')
+def my_account(request):
+    user = request.user
+    user = User.objects.get(id=user.id)
+    address = Address.objects.filter(user=user)
+    order_product = OrderProduct.objects.filter(
+        user=user).order_by('-created_at')[:5]
+    context = {
+        'address': address,
+        'order_product': order_product
+    }
+
+    if request.path == '/my_account/orders':
+        return render(request, 'dashboard/my-orders.html', context)
+
+    return render(request, 'dashboard/dashboard.html', context)
+
+
+def wishlist(request):
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+    books = wishlist.book.all()
+    context = {
+        'books': books
+    }
+    return render(request, 'dashboard/wishlist.html', context)

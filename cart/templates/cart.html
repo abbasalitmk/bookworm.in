@@ -24,17 +24,17 @@
 <!-- cart-main-area start -->
 <div class="cart-main-area section-padding--lg bg--white">
     <div class="container">
-        
-        
+
+
         {% if not cart_item %}
         <div class="text-center">
             <h2 class="mb-4">Your shopping cart is empty</h2>
             <a href="{% url 'books' %}" class="btn btn-primary text-center">Continue Shopping</a>
         </div>
         {% else %}
-            
+
         <div class="row">
-            <div class="col-md-8 col-sm-12 ol-lg-8">
+            <div class="col-md-9 col-sm-12 ol-lg-9">
                 <form action="#">
                     <div class="table-content wnro__table table-responsive">
                         <table>
@@ -43,29 +43,50 @@
                                     <th class="product-thumbnail">Image</th>
                                     <th class="product-name">Product</th>
                                     <th class="product-price">Price</th>
+                                    <th class="product-price">Variation</th>
                                     <th class="product-quantity">Quantity</th>
                                     <th class="product-subtotal">Total</th>
-                                    <th class="product-remove">Remove</th>
+                                    <th class="product-remove"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                
-                                
-                                {% for items in cart_item  %}
+
+
+                                {% for items in cart_item %}
 
                                 <tr>
-                                    <td class="product-thumbnail"><a href="#"><img class="w-50" src="{{items.book.image.first.url.url}}"
-                                                alt="product img"></a></td>
+                                    <td class="product-thumbnail"><a href="#"><img class="w-50"
+                                                src="{{items.book.image.first.url.url}}" alt="product img"></a></td>
                                     <td class="product-name"><a href="#">{{items.book.title}}</a></td>
                                     <td class="product-price"><span class="amount">{{items.book.price}}</span></td>
-                                    
-                                    <td class="product-quantity"><a href="{% url 'add_cart' items.book.id %}"><i class="fa fa-plus-square fa-2x" aria-hidden="true"></i></a><span style="font-size: 1.3rem; padding: 2px; margin: 2px;">{{items.quantity}}</span><a href="{% url 'remove_cart' items.book.id %}"><i class="fa fa-minus-square fa-2x" aria-hidden="true"></i></a> </td>
+                                    <td class="product-variation">
+
+                                        <span class="">
+                                            {% for variation_item in items.variations.all %}
+                                            {{variation_item.variation_category}} :
+                                            {{variation_item.variation_value}}<br />
+
+                                            {% endfor %}
+                                        </span>
+                                    </td>
+
+
+                                    <td class="product-quantity">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a href="{% url 'decrement_cart_item' items.id %}"
+                                                class="btn btn-secondary"><i class="fa-solid fa-minus fa-lg"></i></a>
+                                            <button type="button" class="btn btn-dark">{{items.quantity}}</button>
+                                            <a href="{% url 'increment_cart_item' items.id %}"
+                                                class="btn btn-secondary"><i class="fa-solid fa-plus fa-lg"></i></a>
+                                        </div>
+                                    </td>
                                     <td class="product-subtotal">{{items.sub_total}}</td>
-                                    <td class="product-remove"><a href="{% url 'delete_cart_item' items.book.id %}"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+                                    <td class="product-remove"><a href=" {% url 'delete_Cart' items.id %}"><i
+                                                class="fa fa-trash-o" aria-hidden="true"></i></a></td>
                                 </tr>
                                 {% endfor %}
 
-                               
+
                             </tbody>
                         </table>
                     </div>
@@ -75,11 +96,11 @@
                         <li><a href="#">Coupon Code</a></li>
                         <li><a href="#">Apply Code</a></li>
                         <li><a href="#">Update Cart</a></li>
-                        <li><a href="#">Check Out</a></li>
+                        <li><a href="{% url 'checkout' %}">Check Out</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12 ol-lg-4 ">
+            <div class="col-md-3 col-sm-12 ol-lg-3 ">
                 <div class="cartbox__total__area">
                     <div class="cartbox-total d-flex justify-content-between">
                         <ul class="cart__total__list">
@@ -90,13 +111,13 @@
                         <ul class="cart__total__tk">
                             <li>{{total}}</li>
                             <li>{{gst}}</li>
-            
+
                             {% if delivery_charge == 0 %}
                             <li>Free</li>
                             {% else %}
                             <li>{{delivery_charge}}</li>
                             {% endif %}
-            
+
                         </ul>
                     </div>
                     <div class="cart__total__amount">
@@ -104,9 +125,9 @@
                         <span>{{total}}</span>
                     </div>
                 </div>
-        </div>
-        <div class="row">
-            
+            </div>
+            <div class="row">
+
             </div>
         </div>
         {% endif %}

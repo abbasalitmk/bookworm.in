@@ -27,11 +27,41 @@
 	<link rel="stylesheet" href="{% static 'theme/style.css' %}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+
 	<!-- Cusom css -->
 	<link rel="stylesheet" href="{% static 'theme/css/custom.css' %}">
 
+
+	<!-- Toaster notification -->
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="{% static 'toastr.min.js' %}"></script>
+	<link href="{% static 'toastr.min.css' %}" rel="stylesheet">
+	<script>
+		toastr.options = {
+			"closeButton": true,
+			"debug": false,
+			"newestOnTop": false,
+			"progressBar": true,
+			"positionClass": "toast-top-right",
+			"preventDuplicates": true,
+			"onclick": null,
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		}
+	</script>
+
+
+	
 	<!-- Modernizer js -->
 	<script src="{% static 'theme/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+
 </head>
 
 <body>
@@ -87,7 +117,7 @@
 							{% endif %}
 							#} -->
 							
-							<li class="wishlist"><a href="#"></a></li>
+							<li class="wishlist"><a href="{% url 'wishlist' %}"></a></li>
 							<li class="shopcart"><a class="cartbox_active" href="#"><span
 										class="product_qun">
 											{% show_cart_items as cart_items %}
@@ -107,7 +137,7 @@
 											<span>$66.00</span>
 										</div>
 										<div class="mini_action checkout">
-											<a class="checkout__btn" href="cart.html">Go to Checkout</a>
+											<a class="checkout__btn" href="{% url 'checkout' %}">Go to Checkout</a>
 										</div>
 										
 
@@ -143,7 +173,7 @@
 											</div>
 										</div>
 										<div class="mini_action cart">
-											<a class="cart__btn" href="cart.html">View and edit cart</a>
+											<a class="cart__btn" href="{% url 'cart' %}">View and edit cart</a>
 										</div>
 									</div>
 								</div>
@@ -206,8 +236,8 @@
 												<div class="switcher-currency-trigger">
 													<div class="setting__menu">
 														<span><a href="#">Compare Product</a></span>
-														<span><a href="{% url 'profile' %}">My Account</a></span>
-														<span><a href="#">My Wishlist</a></span>
+														<span><a href="{% url 'my_account' %}">My Account</a></span>
+														<span><a href="{% url 'wishlist' %}">My Wishlist</a></span>
 														<span><a href="{% url 'login' %}">Sign In</a></span>
 														<span><a href="{% url 'register' %}">Create An Account</a></span>
 														<span><a href="{% url 'logout' %}">Logout</a></span>
@@ -317,10 +347,11 @@
 							</div>
 						</div>
 						<div class="col-lg-6 col-md-6 col-sm-12">
-							<div class="payment text-right">
+							<div class="payment_logo text-right">
 								<img src="{% static 'theme/images/icons/payment.png' %}" alt="" />
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -331,11 +362,13 @@
 	<!-- //Main wrapper -->
 
 	<!-- JS Files -->
-	<script src="{% static 'theme/js/vendor/jquery-3.2.1.min.js' %}"></script>
+
 	<script src="{% static 'theme/js/popper.min.js' %}"></script>
 	<script src="{% static 'theme/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'theme/js/plugins.js' %}"></script>
 	<script src="{% static 'theme/js/active.js' %}"></script>
+
+	
 
 </body>
 

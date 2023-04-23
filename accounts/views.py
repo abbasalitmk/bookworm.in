@@ -13,6 +13,9 @@ from django.contrib import messages
 import random
 from django.contrib.auth.forms import PasswordResetForm
 import pyotp
+from cart.models import Cart, CartItem
+from cart.views import _cart_id
+from django.http import HttpResponse
 
 
 def send_otp(request, phone):
@@ -89,14 +92,13 @@ def verify_otp(request):
     error = ''
     if request.method == 'POST':
         otp = request.session['otp']
-        print(f'otp is{otp}')
+
         user_otp = request.POST['user_otp']
 
         if user_otp != '':
             phone = request.session['phone']
 
             if 'otp' in request.session and int(user_otp) == int(request.session['otp']):
-                print(f'user otp is{user_otp}')
 
                 user = User.objects.get(phone=phone)
                 user.is_verified = True
@@ -127,9 +129,24 @@ def signin(request):
         else:
             user = authenticate(request, phone=phone, password=password)
             if user is not None:
+                try:
+                    cart = Cart.objects.get(cart_id=_cart_id(request))
+                    is_cartitem_exist = CartItem.objects.filter(
+                        cart=cart).exists()
+
+                    if is_cartitem_exist:
+                        cart_item = CartItem.objects.filter(cart=cart)
+                        for item in cart_item:
+                            item.user = user
+                            item.save()
+
+                except:
+                    pass
+
                 if user.is_verified:
+
                     login(request, user)
-                    return redirect('profile')
+                    return redirect('home')
                 else:
                     send_otp(request, user.phone)
                     return redirect('verify-otp')

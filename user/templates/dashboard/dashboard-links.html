@@ -1,0 +1,44 @@
+<aside class="col-md-3">
+<div class="bg-c-lite-green user-profile">
+    <div class="card-block text-center text-white">
+        <div class="m-b-25">
+            <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
+        </div>
+        <h6 class="f-w-600 p-2">Hello, {{request.user.first_name}}</h6>
+        <a href="#"> <i class="fa fa-power-off fa-2x "></i> </a>
+       
+    </div>
+</div>
+    <!--   SIDEBAR   -->
+    <ul class="list-group">
+        <a class="list-group-item {%if request.path == '/my_account/'%} active {%endif%}" href="{% url 'my_account' %}"> Dashboard </a>
+        <a class="list-group-item {%if request.path == '/my_account/orders'%} active {%endif%}" href="{% url 'my_orders' %}"> My Orders </a>
+        <a class="list-group-item {%if request.path == '/my_account/wishlist'%} active {%endif%}" href="{% url 'wishlist' %}"> Wishlist </a>
+        <a class="list-group-item" href="#"> Account Info </a>
+        <a class="list-group-item" href="#">Settings </a>
+        <a class="list-group-item" href="#">Change Password </a>
+    </ul>
+    <br>
+   
+    <!--   SIDEBAR .//END   -->
+</aside>
+
+
+<style>
+
+.user-card-full .user-profile {
+    border-radius: 5px 0 0 5px;
+}
+
+.bg-c-lite-green {
+        background: -webkit-gradient(linear, left top, right top, from(#f29263), to(#ee5a6f));
+    background: linear-gradient(to right, #ee5a6f, #f29263);
+}
+
+
+
+.img-radius {
+    border-radius: 5px;
+}
+
+</style>

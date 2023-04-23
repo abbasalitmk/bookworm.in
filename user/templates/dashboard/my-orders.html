@@ -1,0 +1,201 @@
+{% extends 'theme.html' %}
+{% block 'content' %}<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-conten padding-y bg" style="margin-top: 20vh;">
+
+
+
+
+
+    <div class="container">
+        <div class="row">
+            {% include 'dashboard/dashboard-links.html' %}
+            <main class="col-md-9">
+                <header class="card-header">
+                    <h5>Orders</h5>
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tbody>
+                            {% for order in order_product %}
+                            <tr>
+
+                                <td width="65">
+                                    {% with order.book.image.first as image %}
+                                    <img class="img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
+                                        src="{{ image.url.url }}" width="70" height="70" />
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <p class="title mb-0">{{order.book.title}}</p>
+                                    <p class="price text-muted">Rs. {{order.order.order_total}}</p>
+                                </td>
+
+
+                                <td> Type:
+                                    <br>
+
+                                    {% if order.variations.first is None %}
+
+                                    Paperback
+                                    {% else %}
+
+                                    {{order.variations.first}}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if order.order.status != 'Cancelled' %}
+                                    <strong class="bg-success p-1 text-white">{{order.order.status}}</strong>
+                                    {% else %}
+                                    <strong class="bg-danger p-1 text-white">{{order.order.status}}</strong>
+                                    {% endif %}
+                                </td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td width="250">
+
+
+                                    {% if order.order.status == 'Cancelled' %}
+                                        <strong class="text-info">Refund Initiated</strong><br>
+                                        <small>Amount will credit to your account</small>
+                                    {% elif order.order.status == 'Delivered' %}
+                                        <a href="{% url 'generate_invoice' order.order.order_number %}" class="btn btn-outline-info"><i class="fa-solid fa-receipt"></i> Invoice</a>
+                                    {% else %}
+                                        <a href="{% url 'cancel_order' order.order.order_number %}" class="btn btn-outline-danger"><i
+                                                    class="fa-solid fa-ban"></i> Cancel</a>
+                                    
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </main>
+        </div> <!-- row.// -->
+    </div>
+    <style>
+        p {
+            font-size: 14px;
+            margin-bottom: 7px;
+
+        }
+
+        .small {
+            letter-spacing: 0.5px !important;
+        }
+
+
+        hr {
+            background-color: rgba(248, 248, 248, 0.667);
+        }
+
+
+        .bold {
+            font-weight: 500;
+        }
+
+        .change-color {
+            color: #AB47BC !important;
+        }
+
+        .card-2 {
+            box-shadow: 1px 1px 3px 0px rgb(112, 115, 139);
+
+        }
+
+        .fa-circle.active {
+            font-size: 8px;
+            color: #AB47BC;
+        }
+
+        .fa-circle {
+            font-size: 8px;
+            color: #aaa;
+        }
+
+        .rounded {
+            border-radius: 2.25rem !important;
+        }
+
+
+        .progress-bar {
+            background-color: #AB47BC !important;
+        }
+
+
+        .progress {
+            height: 5px !important;
+            margin-bottom: 0;
+        }
+
+        .invoice {
+            position: relative;
+            top: -70px;
+        }
+
+        .Glasses {
+            position: relative;
+            top: -12px !important;
+        }
+
+        .card-footer {
+            background-color: #AB47BC;
+            color: #fff;
+        }
+
+        h2 {
+            color: rgb(78, 0, 92);
+            letter-spacing: 2px !important;
+        }
+
+        .display-3 {
+            font-weight: 500 !important;
+        }
+
+        @media (max-width: 479px) {
+            .invoice {
+                position: relative;
+                top: 7px;
+            }
+
+            .border-line {
+                border-right: 0px solid rgb(226, 206, 226) !important;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            h2 {
+                color: rgb(78, 0, 92);
+                font-size: 17px;
+            }
+
+            .display-3 {
+                font-size: 28px;
+                font-weight: 500 !important;
+            }
+        }
+
+        .card-footer small {
+            letter-spacing: 7px !important;
+            font-size: 12px;
+        }
+
+        .border-line {
+            border-right: 1px solid rgb(226, 206, 226)
+        }
+    </style>
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+{% endblock 'content' %}

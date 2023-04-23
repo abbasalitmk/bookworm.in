@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+
+{% block 'content' %}
+
+<div class="page-wrapper">
+    <div class="page-content d-flex justify-content-center">
+        <div class="card col-10">
+            <div class="card-header">
+                <h3>Coupons</h3>
+            </div>
+            
+            <ul class="list-group">
+
+                {% for coupon in coupons %}
+
+                <li class="list-group-item d-flex justify-content-between align-items-center fs-4 "><span
+                        class="badge bg-warning">{{coupon.coupon_text}}</span>
+                    <span class="badge bg-info rounded-pill">Discount: Rs. {{coupon.discount_amount}}</span>
+                    <span><a href=""><i class="me-3 text-success bx bx-edit"></i></a><a href="{% url 'delete_coupon' coupon.id %}"><i
+                                class="text-danger bx bx-trash"></i></a></span>
+                </li>
+                {% endfor %}
+
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+</div>
+{% endblock 'content' %}

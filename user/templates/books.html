@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block 'content' %}
-
+<!-- 
 <div id="carouselExampleIndicators" class="carousel slide" style='margin-top:13vh' data-ride="carousel">
 	<ol class="carousel-indicators">
 		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -28,9 +28,11 @@
 		<span class="carousel-control-next-icon" aria-hidden="true"></span>
 		<span class="sr-only">Next</span>
 	</a>
-</div>
+</div> -->
 <!-- Start Shop Page -->
 <div class="page-shop-sidebar left--sidebar bg--white section-padding--lg">
+	<h2 class="text-center mt-5 mb-5">SHOP BOOKS</h2>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-3 col-12 order-2 order-lg-1 md-mt-40 sm-mt-40">
@@ -39,21 +41,24 @@
 						<h3 class="wedget__title">Filter by price</h3>
 						<div class="content-shopby">
 							<div class="price_filter s-filter clear">
-								<form action="#" method="GET">
-									<div id="slider-range"></div>
-									<div class="slider__range--output">
-										<div class="price__output--wrap">
-											<div class="price--output">
-												<span>Price :</span><input type="text" id="amount" readonly="">
-											</div>
-											<div class="price--filter">
-												<a href="#">Filter</a>
-											</div>
-										</div>
+								<form action="{% url 'filter_price' %}" method="GET">
+								<div class="form-group row">
+									<label for="min-price" class="col-sm-4 col-form-label">Min. Price:</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" id="min-price" name="min-price"
+											placeholder="100">
 									</div>
+								</div>
+								<div class="form-group row">
+									<label for="min-price" class="col-sm-4 col-form-label">Max. Price</label>
+									<div class="col-sm-4">
+										<input type="number" class="form-control" id="min-price" name="max-price"
+											placeholder="100">
+									</div>
+								</div>
+								<button type="submit" class="btn btn-primary">Filter</button>
 								</form>
 							</div>
-						</div>
 					</aside>
 					<aside class="wedget__categories poroduct--cat">
 						<h3 class="wedget__title">Product Categories</h3>
@@ -61,8 +66,8 @@
 
 							{% for cat in category %}
 
-							<li><a href="{% url 'category_list' cat.cat_name %}">
-									{{cat.cat_name}}<span>({{cat.book_count}})</span></a></li>
+							<li><a href="{% url 'category_list' cat.name %}">
+									{{cat.name}}<span>({{cat.num_books}})</span></a></li>
 
 							{% endfor %}
 
@@ -81,24 +86,35 @@
 								<a class="nav-item nav-link" data-toggle="tab" href="#nav-list" role="tab"><i
 										class="fa fa-list"></i></a>
 							</div>
-							<p>Showing 1–12 of 40 results</p>
+							<p>Showing <b>{{book_count}}</b> results</p>
 							<div class="orderby__wrapper">
 								<span>Sort By</span>
-								<select class="shot__byselect">
-									<option>Default sorting</option>
-									<option>HeadPhone</option>
-									<option>Furniture</option>
-									<option>Jewellery</option>
-									<option>Handmade</option>
-									<option>Kids</option>
-								</select>
+								<form method="GET" action="" id="sort-form">
+									<select class="shot__byselect form-control" name="sort" id="sort-option">
+										<option value="default">Default Sorting</option>
+										<option value="latest">Latest Books</option>
+										<option value="price-low">Price-Low to High</option>
+										<option value="price-high">Price-High to Low</option>
+										<option value="name">Name</option>
+									</select>
+								</form>
+
+								<script>
+									$(document).ready(function () {
+										$('#sort-option').change(function () {
+											$('#sort-form').submit();
+										});
+									});
+								</script>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="tab__container">
+
 					<div class="shop-grid tab-pane fade show active" id="all-books" role="tabpanel">
 						<div class="row">
+
 							<!-- Start Single Product -->
 
 							{% for book in books %}
@@ -151,26 +167,28 @@
 						</div>
 						<!-- paginator -->
 						{% if books.has_other_pages %}
-							
+
 						<nav aria-label="Page navigation example">
 							<ul class="pagination">
-								
-								{% if books.has_previous %}			
-								<li class="page-item"><a class="page-link" href="?page=	{{books.previous_page_number}}">Previous</a></li>
+
+								{% if books.has_previous %}
+								<li class="page-item"><a class="page-link"
+										href="?page=	{{books.previous_page_number}}">Previous</a></li>
 								{% else %}
 								<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
 								{% endif %}
-								
-								{% for i in books.paginator.page_range  %}
-								
-									{% if books.number == i %}
-										<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
-									{% else %}
-										<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
-									{% endif %}
+
+								{% for i in books.paginator.page_range %}
+
+								{% if books.number == i %}
+								<li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+								{% else %}
+								<li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+								{% endif %}
 								{% endfor %}
 								{% if books.has_next %}
-								<li class="page-item"><a class="page-link" href="?page={{books.next_page_number}}">Next</a></li>
+								<li class="page-item"><a class="page-link"
+										href="?page={{books.next_page_number}}">Next</a></li>
 								{% else %}
 								<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
 								{% endif %}

@@ -1,0 +1,171 @@
+{% extends 'dashboard/base.html' %}
+
+{% block 'content' %}
+
+<!--start page wrapper -->
+<div class="page-wrapper">
+	<div class="page-content">
+		<!--breadcrumb-->
+		<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+			<div class="breadcrumb-title pe-3">Books</div>
+			<div class="ps-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb mb-0 p-0">
+						<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Books</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="ms-auto">
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary">Settings</button>
+					<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
+						data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"> <a class="dropdown-item"
+							href="javascript:;">Action</a>
+						<a class="dropdown-item" href="javascript:;">Another action</a>
+						<a class="dropdown-item" href="javascript:;">Something else here</a>
+						<div class="dropdown-divider"></div> <a class="dropdown-item" href="javascript:;">Separated
+							link</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end breadcrumb-->
+
+		<div class="card">
+			<div class="card-body p-4">
+				<h5 class="card-title">Add New Book</h5>
+				<hr/>
+
+				<form method="POST" action="{% url 'add_book' %}" enctype="multipart/form-data">
+					{% csrf_token %}
+
+					{% if book_form.errors %}
+					<div class="alert alert-danger">
+						{% for field, errors in book_form.errors.items %}
+						{% for error in errors %}
+						<p>{{ field }}: {{ error }}</p>
+						{% endfor %}
+						{% endfor %}
+					</div>
+					{% endif %}
+
+
+					<div class="form-body mt-4">
+						<div class="row">
+							<div class="col-lg-8">
+								<div class="border border-3 p-4 rounded">
+									<div class="mb-3">
+										<label for="inputProductTitle" class="form-label">Product Title</label>
+										{{ book_form.title }}
+									</div>
+									<div class="mb-3">
+										<label for="inputProductDescription" class="form-label">Description</label>
+										{{ book_form.description }}
+									</div>
+									<div class="mb-3 row">
+										<div class="col-7">
+											<label for="inputProductDescription" class="form-label">Product Images</label>
+											{{ book_form.image }}
+									
+										</div>
+										<div class="col-4">
+											<img id="preview" src="{{image}}" alt="Image Preview" style="max-width:100px; max-height:120px;">
+										</div>
+									
+									</div>
+									<div class="row">
+										
+										<div class="col-md-6">
+											<label for="" class="form-label">Variation Type</label>
+											{{ book_form.variation_type }}
+										</div>
+										<div class="col-md-6">
+											<label for="" class="form-label">Variation Price</label>
+
+											{{ book_form.variation_price }}
+										</div>
+										<div class="mb-3">
+											<label for="inputProductTitle" class="form-label">Author</label>
+											{{ book_form.author_name }}
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Book Type</label>
+											{{ book_form.book_type }}
+										</div>
+
+
+
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="border border-3 p-4 rounded">
+									<div class="row g-3">
+										<div class="col-md-6">
+											<label for="inputPrice" class="form-label">Price</label>
+											{{ book_form.price }}
+										</div>
+										<div class="col-md-6">
+											<label for="inputCompareatprice" class="form-label">Stock</label>
+											<input type="text" name='stock' class="form-control"
+												id="inputCompareatprice" placeholder="00.00">
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Publishing Date</label>
+											{{ book_form.publishing_date }}
+										</div>
+										<div class="mb-3">
+											<label for="inputProductTitle" class="form-label">Language</label>
+											{{ book_form.language }}
+										</div>
+
+										<div class="col-md-6">
+											<label for="inputCostPerPrice" class="form-label">Discount Price</label>
+											{{ book_form.discount }}
+										</div>
+										<div class="col-8 mb-3">
+											<label for="inputProductType" class="form-label">Category</label>
+											{{ book_form.categories }}
+
+										</div>
+
+
+
+										<div class="col-12">
+											<label for="inputProductTags" class="form-label">Product Tags</label>
+											<input type="text" class="form-control" id="inputProductTags"
+												placeholder="Enter Product Tags">
+										</div>
+										<div class="col-12">
+											<div class="d-grid">
+												<button type="submit" class="btn btn-primary">Save Product</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div><!--end row-->
+					</div>
+				</form>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+<!--end page wrapper -->
+
+<!-- js scripts -->
+
+<script>
+	function previewImage(event) {
+		let preview = document.getElementById('preview');
+		preview.src = URL.createObjectURL(event.target.files[0]);
+	}
+</script>
+
+{% endblock 'content' %}

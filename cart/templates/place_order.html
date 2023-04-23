@@ -1,0 +1,151 @@
+﻿{% extends 'theme.html' %}
+
+
+{% block 'content' %}<!-- Start Checkout Area -->
+<section class="wn__checkout__area section-padding--lg bg__white" style="margin-top: 10vh;">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="wn_checkout_wrap">
+
+					<div class="checkout_coupon">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6 col-12">
+				<div class="customer_details">
+					<h3>Review your order</h3>
+					<div class="customar__field">
+
+
+						<div class="card">
+							<h5 class="card-header">Shipping Address</h5>
+							<div class="card-body fs">
+								{% for items in order_item %}
+
+								<p class="card-text" style="font-size: 1.2rem;">{{items.first_name}} {{items.last_name}}
+								</p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.address_line1}} </p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.address_line2}} </p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.pincode}} </p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.district}} </p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.state}} </p>
+								<p class="card-text" style="font-size: 1.2rem;">{{items.phone}} </p>
+								{% endfor %}
+
+							</div>
+								
+						</div>
+						<div class="mt-5">
+						<a href="{% url 'cash_on_delivery' order_number %}" class="btn btn-info" id="">Cash on Delivery</a>
+						<button class="btn btn-danger" id="rzp-button1">Pay with Razorpay</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6 col-12 md-mt-40 sm-mt-40">
+				<div class="wn__order__box">
+					<h3 class="onder__title">Your order</h3>
+					<ul class="order__total">
+						<li>Product</li>
+						<li>Total</li>
+					</ul>
+					<ul class="order_product">
+						{% for items in cart_item %}
+
+						<li class="text-danger">{{items.book.title}} ×
+							{{items.quantity}}<span>{{items.book.price}}</span></li>
+						<li class="text-muted">
+							{% for variation_item in items.variations.all %}
+							{{variation_item.variation_category}} :
+							{{variation_item.variation_value}} <br />
+							{% endfor %}
+
+						</li>
+						{% endfor %}
+
+					</ul>
+					<ul class="shipping__method">
+						<li>Cart Subtotal <span></span></li>
+						<li>Shipping<span>{{delivery_charge}}</span></li>
+					</ul>
+
+
+					<ul class="shipping__method">
+						<li>GST<span>{{gst}}</span></li>
+					</ul>
+					{% if coupon_discount %}
+
+					<ul class="shipping__method">
+						<li class="text-success"> Coupon Discount<span>₹{{coupon_discount}}</span></li>
+					</ul>
+					{% endif %}
+					<ul class="total__amount">
+						<li>Order Total <span>₹{{grand_total}}</span></li>
+					</ul>
+				</div>
+
+				
+
+			
+				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+				<script>
+					var options = {
+						"key": "{{ razorpay_key_id }}", // Enter the Key ID generated from the Dashboard
+						"amount": "{{ razorpay_amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+						"currency": "INR",
+						"name": "Acme Corp",
+						"description": "Test Transaction",
+						"image": "https://example.com/your_logo",
+						"order_id": "{{ razorpay_order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+						"callback_url": "{% url 'verify_payment' %}",
+						"prefill": {
+							"name": "Gaurav Kumar",
+							"email": "gaurav.kumar@example.com",
+							"contact": "9000090000"
+						},
+						"notes": {
+							"address": "Razorpay Corporate Office"
+						},
+						"theme": {
+							"color": "#3399cc"
+						}
+					};
+					var rzp1 = new Razorpay(options);
+					document.getElementById('rzp-button1').onclick = function (e) {
+						rzp1.open();
+						e.preventDefault();
+					}
+				</script>
+
+
+				<!-- <form action=" method="POST">
+				<script src="https://checkout.razorpay.com/v1/checkout.js" 
+					data-key="{{ razorpay_key_id }}"
+					data-amount="{{ razorpay_amount }}" 
+					data-currency="INR" 
+					data-name="Bookstore"
+					data-description="Payment for books"
+					data-image="{{ request.scheme }}://{{ request.get_host }}/static/img/logo.png"
+					data-prefill.name="{{ request.user.get_full_name }}" 
+					data-prefill.email="{{ request.user.email }}"
+					data-theme.color="#F37254">
+					</script>
+									{% csrf_token %}
+
+				<input type="hidden" name="razorpay_order_id" value="{{ razor_order.id }}">
+				<input type="hidden" name="grand_total" value="{{ grand_total }}">
+				<input type="submit" value="Pay">
+			</form> -->
+
+			</div>
+		</div>
+
+	</div>
+</section>
+<!-- End Checkout Area -->
+{% endblock %}

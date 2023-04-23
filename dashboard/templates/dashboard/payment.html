@@ -1,0 +1,150 @@
+{% extends 'dashboard/base.html' %}
+{% block 'content' %}
+
+<!--start page wrapper -->
+<div class="page-wrapper">
+	<div class="page-content">
+		<!--breadcrumb-->
+		<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+			<div class="breadcrumb-title pe-3">Orders</div>
+			<div class="ps-3">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb mb-0 p-0">
+						<li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">Orders</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="ms-auto">
+				<div class="btn-group">
+					<button type="button" class="btn btn-primary">Settings</button>
+					<button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
+						data-bs-toggle="dropdown"> <span class="visually-hidden">Toggle Dropdown</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"> <a class="dropdown-item"
+							href="javascript:;">Action</a>
+						<a class="dropdown-item" href="javascript:;">Another action</a>
+						<a class="dropdown-item" href="javascript:;">Something else here</a>
+						<div class="dropdown-divider"></div> <a class="dropdown-item" href="javascript:;">Separated
+							link</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end breadcrumb-->
+
+		<div class="card">
+			<div class="card-body">
+				<div class="d-lg-flex align-items-center mb-4 gap-3">
+					<div class="position-relative">
+						<input type="text" class="form-control ps-5 radius-30" placeholder="Search Order"> <span
+							class="position-absolute top-50 product-show translate-middle-y"><i
+								class="bx bx-search"></i></span>
+					</div>
+									<div class="col">
+										<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+											<button type="button" class="btn btn-white">Sort By</button>
+											<div class="btn-group" role="group">
+												<button id="btnGroupDrop1" type="button" class="btn btn-white dropdown-toggle dropdown-toggle-nocaret px-1"
+													data-bs-toggle="dropdown" aria-expanded="false">
+													<i class='bx bx-chevron-down'></i>
+												</button>
+												<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+											<button type="button" class="btn btn-white">Collection Type</button>
+											<div class="btn-group" role="group">
+												<button id="btnGroupDrop1" type="button" class="btn btn-white dropdown-toggle dropdown-toggle-nocaret px-1"
+													data-bs-toggle="dropdown" aria-expanded="false">
+													<i class='bx bxs-category'></i>
+												</button>
+												<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="btn-group" role="group">
+											<button type="button" class="btn btn-white">Price Range</button>
+											<div class="btn-group" role="group">
+												<button id="btnGroupDrop1" type="button" class="btn btn-white dropdown-toggle dropdown-toggle-nocaret px-1"
+													data-bs-toggle="dropdown" aria-expanded="false">
+													<i class='bx bx-slider'></i>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-start" aria-labelledby="btnGroupDrop1">
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+													<li><a class="dropdown-item" href="#">Dropdown link</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+				</div>
+				<div class="table-responsive text-center">
+					<table class="table mb-0">
+						<thead class="table-light">
+							<tr>
+								<th>Order No.</th>
+								<th>Payment ID</th>
+								<th>Status</th>
+								<th>Name</th>
+								<th>Total</th>
+								<th>Date</th>
+								<th>Actions</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+
+							{% for order in orders %}
+
+							<tr>
+								<td>
+									<div class="d-flex align-items-center">
+										<div>
+											<input class="form-check-input me-3" type="checkbox" value=""
+												aria-label="...">
+										</div>
+										<div class="ms-2">
+											<h6 class="mb-0 font-14">{{order.order_number	}}</h6>
+										</div>
+									</div>
+								</td>
+
+								<td>{{order.payment.payment_id}}</td>
+
+								<td>
+									<div
+										class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+										<i class='bx bxs-circle me-1'></i>{{order.payment.status}}
+									</div>
+								</td>
+								<td>{{order.user.first_name}}</td>
+
+								<td>{{order.payment.amount_paid}}</td>
+								<td>{{order.created_at|date:"F j, Y"}}</td>
+								<td><button type="button" class="btn btn-warning btn-sm radius-30 px-4">Refund</button></td>
+								<td><button type="button" class="btn btn-primary btn-sm radius-30 px-4">Invoice</button></td>
+								
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+<!--end page wrapper -->
+{% endblock 'content' %}

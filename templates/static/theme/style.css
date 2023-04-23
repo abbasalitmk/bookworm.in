@@ -7377,7 +7377,13 @@ h3.widget-title-modal {
 .table-content table td.product-subtotal {
   font-size: 16px;
   font-weight: bold;
-  width: 120px;
+  width: 100px;
+  color: #333;
+}
+.table-content table td.product-variation {
+  font-size: 14px;
+  font-weight: bold;
+  width: 200px;
   color: #333;
 }
 
@@ -7417,7 +7423,7 @@ h3.widget-title-modal {
 }
 
 .table-content table td.product-quantity {
-  width: 200px;
+  width: 130px;
 }
 
 .table-content table td.product-remove {
@@ -7425,7 +7431,7 @@ h3.widget-title-modal {
 }
 
 .table-content table td.product-price {
-  width: 130px;
+  width: 80px;
 }
 
 .table-content table td.product-name a:hover {
@@ -7946,9 +7952,9 @@ h3.widget-title-modal {
 
 .order_product li {
   color: #333444;
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 400;
-  padding: 15px 0;
+  padding: 8px 0;
 }
 
 .order_product li span {

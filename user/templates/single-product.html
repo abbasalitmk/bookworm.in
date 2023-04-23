@@ -63,54 +63,73 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="col-lg-6 col-12">
 							<div class="product__info__main">
-								<h1>{{books.title}}</h1>
-								<div class="product-info-stock-sku d-flex">
-									<p>Availability:<span> In stock</span></p>
-									<p>SKU:<span> MH01</span></p>
-								</div>
-								<div class="product-reviews-summary d-flex">
-									<ul class="rating-summary d-flex">
-										<li><i class="zmdi zmdi-star-outline"></i></li>
-										<li><i class="zmdi zmdi-star-outline"></i></li>
-										<li><i class="zmdi zmdi-star-outline"></i></li>
-										<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
-										<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
-									</ul>
-									<div class="reviews-actions d-flex">
-										<a href="#">(1 Review)</a>
-										<a href="#">Add Your Review</a>
+
+
+								<!-- add to cart form -->
+								<form action="{% url 'add_cart' books.id %}" method="POST">
+									{% csrf_token %}
+									<h1>{{books.title}}</h1>
+									<div class="product-info-stock-sku d-flex">
+										<p>Availability:<span> In stock</span></p>
+										<p>SKU:<span> MH01</span></p>
 									</div>
-								</div>
-								<div class="price-box">
-									<span>Rs. {{ books.price}}</span>
-								</div>
-								<div class="product-color-label">
-									<span>Color</span>
-									<div class="color__attribute d-flex">
-										<div class="swatch-option color"
-											style="background: #000000 no-repeat center; background-size: initial;">
-										</div>
-										<div class="swatch-option color"
-											style="background: #8f8f8f no-repeat center; background-size: initial;">
+									<div class="product-reviews-summary d-flex">
+										<ul class="rating-summary d-flex">
+											<li><i class="zmdi zmdi-star-outline"></i></li>
+											<li><i class="zmdi zmdi-star-outline"></i></li>
+											<li><i class="zmdi zmdi-star-outline"></i></li>
+											<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
+											<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
+										</ul>
+										<div class="reviews-actions d-flex">
+											<a href="#">(1 Review)</a>
+											<a href="#">Add Your Review</a>
 										</div>
 									</div>
-								</div>
-								<div class="box-tocart d-flex">
-									<span>Qty</span>
-									<input id="qty" class="input-text qty" name="qty" min="1" value="1" title="Qty"
-										type="number">
-									<div class="addtocart__actions">
-										{% if in_cart %}
-											<a href="{% url 'cart'%}"><button class="tocart" style="background-color: green;" type="submit" title="Go to Cart">Added to Cart</button></a>
-										{% else %}
-											<a href="{% url 'add_cart' books.id %}"><button class="tocart" type="submit" title="Add to Cart">Add to Cart</button></a>
-										{% endif %}
+									<div class="price-box">
+										<span>Rs. {{ books.price}}</span>
 									</div>
-								</div>
+									<div class="product-color-label">
+										<div class="color__attribute d-flex">
+											<div class="">
+												<span>Select Type</span>
+												<select name="type" class="form-control" id="">
+													<option value="" desabled selected>Choose a option</option>
+													{% for variation in books.variations.book_type %}
+													<option value="{{ variation.variation_value }}">{{variation.variation_value }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<div class="color__attribute d-flex">
+											<div class="">
+												<span>Select Edition</span>
+												<select name="edition" class="form-control" id="">
+													<option value="" desabled selected>Choose a option</option>
+													{% for variation in books.variations.edition %}
+													<option value="{{ variation.variation_value }}">{{variation.variation_value }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="box-tocart d-flex">
+										<span>Qty</span>
+										<input id="qty" class="input-text qty" name="qty" min="1" value="1" title="Qty"
+											type="number">
+										<div class="addtocart__actions">
+
+											<button class="tocart">Add to Cart</button>
+										</div>
+									</div>
+								</form>
+								<!-- add to cart form end -->
+
 								<div class="product-addto-links clearfix">
-									<a class="wishlist" href="#"></a>
+									<a class="wishlist" href="{% url 'add_to_wishlist' books.id %}"></a>
 									<a class="compare" href="#"></a>
 									<a class="email" href="#"></a>
 								</div>
@@ -248,7 +267,7 @@
 					<div class="row mt--60">
 						<div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
 							<!-- Start Single Product -->
-						
+
 						</div>
 					</div>
 				</div>
@@ -279,7 +298,8 @@
 													<li><a class="compare" href="compare.html"></a></li>
 													<li><a data-toggle="modal" title="Quick View"
 															class="quickview modal-view detail-link"
-															href="#productmodal"></a></li>
+															href="#productmodal"></a>
+													</li>
 												</ul>
 											</div>
 										</div>

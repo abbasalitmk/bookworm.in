@@ -1,0 +1,92 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block 'content' %}
+<div class="page-wrapper">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                <div class="card radius-10 w-100">
+                    <div class="card-header bg-transparent">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="mb-0">Users</h6>
+                            </div>
+                            <div class="dropdown ms-auto">
+                                <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
+                                        class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="javascript:;">Action</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="javascript:;">Another action</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="javascript:;">Something else here</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Photo</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {% for user in users %}
+
+
+
+                                    <tr>
+                                        <td>{{user.first_name}}</td>
+                                        <td><img src="{% static 'admin/assets/avatar.png' %}" width="70px" class=""
+                                                alt="product img"></td>
+                                        <td>{{user.phone}}</td>
+                                    
+                                        <td>{{user.email}}</td>
+                                        
+                                        {% if user.is_superuser %}
+                                            
+                                            
+                                            <td><span class="badge bg-gradient-blooker text-white shadow-sm w-100">Admin</span>
+                                            </td>
+                                            {% else %}
+                                            <td><span class="badge bg-gradient-quepal text-white shadow-sm w-100">User</span>
+                                            </td>
+                                            {% endif %}
+                                        <td>    
+                                                <a href="{% url 'user_status' user.id %}" class="">
+                                                    
+                                                    {% if user.is_active  %}
+                                                        <button class="btn btn-danger btn-sm"><i class='bx bxs-hide'></i>Block</button></a>
+                                                    {% else %}
+                                                        <button class="btn btn-success btn-sm"><i class='bx bx-show'></i>Unblock</button></a>
+                                                    {% endif %}
+                                        </td>
+
+                                        
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        {% endblock 'content' %}

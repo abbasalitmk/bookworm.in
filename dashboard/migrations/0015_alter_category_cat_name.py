@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='category',
             name='cat_name',
-            field=models.CharField(choices=[('Fiction', 'fiction'), ('Novel', 'fovel'), ('Biography', 'fiography'), ('Story', 'ftory'), ('History', 'fistory')], max_length=100),
+            field=models.CharField(choices=[('Fiction', 'fiction'), ('Novel', 'fovel'), (
+                'Biography', 'fiography'), ('Story', 'ftory'), ('History', 'fistory')], max_length=100),
         ),
     ]

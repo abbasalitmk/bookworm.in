@@ -1,0 +1,104 @@
+{% extends 'theme.html' %}
+
+
+{% block 'content' %}<!-- Start Checkout Area -->
+<section class="wn__checkout__area section-padding--lg bg__white" style="margin-top: 10vh;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wn_checkout_wrap">
+
+                    <div class="checkout_coupon">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <div class="customer_details">
+                    <h3>Review your order</h3>
+                    <div class="customar__field">
+
+                        <div class="card">
+                            <h5 class="card-header">Shipping Address</h5>
+                            <div class="card-body fs">
+                                {% for items in order_item %}
+
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.first_name}} {{items.last_name}}
+                                </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.address_line1}} </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.address_line2}} </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.pincode}} </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.district}} </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.state}} </p>
+                                <p class="card-text" style="font-size: 1.2rem;">{{items.phone}} </p>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div class="card mt-5">
+                            <h5 class="card-header">Payment Method</h5>
+                            <div class="card-body">
+                                <h6>Credit/Debit Card, Net Banking, UPI</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-12 md-mt-40 sm-mt-40">
+                <div class="wn__order__box">
+                    <h3 class="onder__title">Your order</h3>
+                    <ul class="order__total">
+                        <li>Product</li>
+                        <li>Total</li>
+                    </ul>
+                    <ul class="order_product">
+                        {% for items in cart_item %}
+
+                        <li class="text-danger">{{items.book.title}} ×
+                            {{items.quantity}}<span>{{items.book.price}}</span></li>
+                        <li class="text-muted">
+                            {% for variation_item in items.variations.all %}
+                            {{variation_item.variation_category}} :
+                            {{variation_item.variation_value}} <br />
+                            {% endfor %}
+
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+                    <ul class="shipping__method">
+                        <li>Cart Subtotal <span></span></li>
+                        <li>Shipping<span>{{delivery_charge}}</span></li>
+                    </ul>
+
+
+                    <ul class="shipping__method">
+                        <li>GST<span>{{gst}}</span></li>
+                    </ul>
+                    {% if coupon_discount %}
+
+                    <ul class="shipping__method">
+                        <li class="text-success"> Coupon Discount<span>₹{{coupon_discount}}</span></li>
+                    </ul>
+                    {% endif %}
+                    <ul class="total__amount">
+                        <li>Order Total <span>₹{{grand_total}}</span></li>
+                    </ul>
+                </div>
+
+              
+                </form>
+
+
+            </div>
+
+          
+        </div>
+    </div>
+    </div>
+</section>
+<!-- End Checkout Area -->
+{% endblock %}

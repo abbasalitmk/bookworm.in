@@ -1,0 +1,59 @@
+{% extends 'dashboard/base.html' %}
+
+{% block 'content' %}
+
+<div class="page-wrapper">
+    <div class="page-content d-flex justify-content-center">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 class="mb-4">Add new coupon</h5>
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                    <p>{{ field }}: {{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row mb-3">
+                    <label for="input35" class="col-sm-4 col-form-label">Coupon text</label>
+                    <div class="col-sm-8">
+                        <input type="text" name='coupon_text' class="form-control" placeholder="Enter coupon text">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="input36" class="col-sm-4 col-form-label">Discount Amount</label>
+                    <div class="col-sm-8">
+                        <input type="text" name='discount_amount' class="form-control" placeholder="Discount Amount">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="input36" class="col-sm-4 col-form-label">Discount Percentage</label>
+                    <div class="col-sm-8">
+                        <input type="text" name='discount_percentage' class="form-control" placeholder="Discount Percentage">
+                    </div>
+                </div>
+             
+               
+                <div class="row">
+                    <label class="col-sm-3 col-form-label"></label>
+                    <div class="col-sm-9">
+                        <div class="d-md-flex d-grid align-items-center gap-3">
+                            <button type="submit" class="btn btn-primary px-4">Save</button>
+                            <button type="button" class="btn btn-light px-4">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+</div>
+</div>
+
+{% endblock 'content' %}

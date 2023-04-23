@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sales Report - {{start_date}} - {{end_date}} </h1>
+    <table id="customers">
+        <tr>
+            <th>Order Number</th>
+            <th>Order Amount</th>
+            <th>Customer Name</th>
+            <th>Order Date</th>
+            <th>Order Status</th>
+        </tr>
+        
+        {% for item in data %}
+        <tr>
+            <td>#{{item.order_number}}</td>
+            <td>{{item.order_total}}</td>
+            <td>{{item.first_name}}</td>
+            <td>{{item.created_at}}</td>
+            <td>{{item.status}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</body>
+
+</html>
