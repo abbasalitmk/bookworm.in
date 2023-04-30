@@ -4,7 +4,9 @@ from order.models import Order, OrderProduct, Payment
 from .forms import BookForm, CategoryForm, CouponForm
 from accounts.models import CustomUser as User
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, Sum
+from django.contrib.auth.decorators import login_required
+
 from django.db.models import Q
 
 from django.template.loader import get_template
@@ -13,14 +15,60 @@ from datetime import datetime, timedelta
 from django.http import HttpResponse
 from .forms import GetYear
 from django.contrib import messages
+from django.db.models.functions import ExtractMonth, ExtractYear
+from django.db.models.functions import TruncMonth
+from django.utils import timezone
 
 
 def dashboard_home(request):
 
     orders = Order.objects.all()
     total_order = orders.count()
+    books = Book.objects.all()
+    total_books = books.count()
     payment = Payment.objects.filter(status='Success')
     total_customers = orders.values('user').distinct().count()
+
+    # for total order for each month chart
+    # get the orders for the current year
+    orders = Order.objects.filter(
+        created_at__year=datetime.today().year)
+
+    # group the orders by month and get the count of orders for each month
+    orders_by_month = orders.annotate(month=TruncMonth(
+        'created_at')).values('month').annotate(count=Count('id'), total_revenue=Sum('order_total'))
+
+    # create a dictionary with the count of orders for each month
+    order_stats_by_month = {d['month'].strftime(
+        '%B'): {'count': d['count'], 'total_revenue': d['total_revenue']} for d in orders_by_month}
+
+    # populate the xValues and yValues arrays for the chart
+    xValues = ['January', 'February', 'March', 'April', 'May', 'June',
+               'July', 'August', 'September', 'October', 'November', 'December']
+    yValues = [order_stats_by_month.get(month, {'count': 0})[
+        'count'] for month in xValues]
+    ##########################
+
+    # for total revenue for each month chart
+    # get the payments for the current year
+    payments = Payment.objects.filter(
+        created_at__year=datetime.today().year, status='Success')
+
+    # group the payments by month and get the total amount paid for each month
+    payments_by_month = payments.annotate(month=TruncMonth(
+        'created_at')).values('month').annotate(total_amount=Sum('amount_paid'))
+
+    # create a dictionary with the total amount paid for each month
+    payment_stats_by_month = {d['month'].strftime(
+        '%B'): d['total_amount'] for d in payments_by_month}
+
+    # populate the xValues and revenueValues arrays for the chart
+    xValues_revenue = ['January', 'February', 'March', 'April', 'May', 'June',
+                       'July', 'August', 'September', 'October', 'November', 'December']
+    revenueValues = [int(payment_stats_by_month.get(
+        month, 0)) for month in xValues_revenue]
+
+    ###############
 
     revenue = 0
 
@@ -30,8 +78,14 @@ def dashboard_home(request):
     context = {
         'orders': orders,
         'total_order': total_order,
+        'total_books': total_books,
         'revenue': revenue,
-        'total_customers': total_customers
+        'total_customers': total_customers,
+        'total_order': total_order,
+        'xValues': xValues,
+        'yValues': yValues,
+        'revenueValues': revenueValues
+
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -95,7 +149,7 @@ def orders(request):
         elif sortby:
             orders = Order.objects.filter(status=sortby)
         else:
-            orders = Order.objects.all()
+            orders = Order.objects.all().order_by('-created_at')
 
     context = {
         'orders': orders,
@@ -172,7 +226,9 @@ def edit_book(request, book_id):
             variation_type = form.cleaned_data['variation_type']
             variation_price = form.cleaned_data['variation_price']
             # assuming there is only one BookVariation object per Book
-            book_variation = book.book_variation.first()
+            # or create a new one if it doesn't exist
+            book_variation, _ = BookVariation.objects.get_or_create(book=book)
+
             book_variation.variation_type = variation_type
             book_variation.price = variation_price
             book_variation.save()
@@ -198,10 +254,21 @@ def edit_book(request, book_id):
             # Redirect to the book detail page
             return redirect('books_list')
     else:
+        variation_type = ""
+        variation_price = ""
+
+        try:
+            variation_type = book.book_variation.first().variation_type
+            variation_price = book.book_variation.first().price
+
+        except:
+
+            pass
 
         initial_values = {
-            'variation_type': book.book_variation.first().variation_type,
-            'variation_price': book.book_variation.first().price,
+
+            'variation_type': variation_type,
+            'variation_price': variation_price,
             'author_name': book.author.first().name,
             'categories': selected_categories
         }
@@ -298,6 +365,7 @@ def coupons(request):
     return render(request, 'dashboard/coupons.html', context)
 
 
+@ login_required(login_url='login')
 def add_coupon(request):
     if request.method == 'POST':
         form = CouponForm(request.POST)
@@ -312,12 +380,14 @@ def add_coupon(request):
     return render(request, 'dashboard/add_coupon.html', context)
 
 
+@ login_required(login_url='login')
 def delete_coupon(request, coupon_id):
     coupon = Coupon.objects.get(id=coupon_id)
     coupon.delete()
     return redirect('coupons')
 
 
+@ login_required(login_url='login')
 def change_status(request, order_number):
     if request.method == 'POST':
         status = request.POST.get('status')
@@ -331,6 +401,7 @@ def change_status(request, order_number):
         return redirect('orders')
 
 
+@ login_required(login_url='login')
 def search_order(request):
     status_choices = Order.STATUS
     if 'keyword' in request.GET:
@@ -346,6 +417,7 @@ def search_order(request):
     return render(request, 'dashboard/orders.html', context)
 
 
+@ login_required(login_url='login')
 def sales_report(request):
 
     if request.method == 'GET':

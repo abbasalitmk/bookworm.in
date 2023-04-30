@@ -47,7 +47,7 @@ def resend_otp(request, phone):
 def register(request):
 
     if request.user.is_authenticated:
-        return redirect('profile')
+        return redirect('home')
 
     if request.method == 'POST':
         name = request.POST['name']
@@ -87,7 +87,7 @@ def verify_otp(request):
         return redirect('home')
 
     if request.user.is_authenticated:
-        return redirect('profile')
+        return redirect('home')
 
     error = ''
     if request.method == 'POST':
@@ -146,6 +146,7 @@ def signin(request):
                 if user.is_verified:
 
                     login(request, user)
+                    messages.success(request, 'Login success')
                     return redirect('home')
                 else:
                     send_otp(request, user.phone)
@@ -156,9 +157,10 @@ def signin(request):
     return render(request, 'login.html', {'error': error})
 
 
-@ never_cache
+@never_cache
 def signout(request):
     logout(request)
+    messages.error(request, 'You are loged out')
     return redirect('home')
 
 

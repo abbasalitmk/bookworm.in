@@ -3,8 +3,8 @@
 {% block 'content' %}
 
 <!-- Start Bradcaump area -->
-<div id="carouselExampleIndicators" class="carousel slide" style='margin-top:13vh' data-ride="carousel">
-	<ol class="carousel-indicators">
+<div id="carouselExampleIndicators" class="carousel slide" style='margin-top:15vh' data-ride="carousel">
+	<!-- <ol class="carousel-indicators">
 		<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
 		<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
 		<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
@@ -27,7 +27,7 @@
 	<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
 		<span class="carousel-control-next-icon" aria-hidden="true"></span>
 		<span class="sr-only">Next</span>
-	</a>
+	</a> -->
 </div>
 <div class="container">
 	<div class="row">
@@ -43,12 +43,25 @@
 	</div>
 </div>
 </div>
+
+{% if messages %}
+
+	{% for message in messages %}
+
+		<script>
+			toastr["{{message.tags}}"]("{{message}}");
+		</script>
+
+	{% endfor %}
+
+{% endif %}
+	
 <!-- End Bradcaump area -->
 <!-- Start main Content -->
 <div class="maincontent bg--white pt--80 pb--55">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-9 col-12">
+			<div class="col-lg-12 col-12">
 				<div class="wn__single__product">
 
 					<div class="row">
@@ -90,32 +103,32 @@
 										</div>
 									</div>
 									<div class="price-box">
+										<strong class="text-primary">PAPERBACK</strong>
 										<span>Rs. {{ books.price}}</span>
 									</div>
+									
+									{% if books.book_variation.first %}										
+										<div class="variation_price">
+											<strong class="text-primary">E-BOOK</strong>
+											<span>Rs. {{ books.book_variation.first.price}}</span>
+										</div>
+									
+
 									<div class="product-color-label">
 										<div class="color__attribute d-flex">
 											<div class="">
 												<span>Select Type</span>
 												<select name="type" class="form-control" id="">
 													<option value="" desabled selected>Choose a option</option>
-													{% for variation in books.variations.book_type %}
-													<option value="{{ variation.variation_value }}">{{variation.variation_value }}</option>
+													{% for variation in books.book_variation.all %}
+													<option value="{{ variation.variation_type }}">{{variation.variation_type }}</option>
 													{% endfor %}
 												</select>
 											</div>
 										</div>
-										<div class="color__attribute d-flex">
-											<div class="">
-												<span>Select Edition</span>
-												<select name="edition" class="form-control" id="">
-													<option value="" desabled selected>Choose a option</option>
-													{% for variation in books.variations.edition %}
-													<option value="{{ variation.variation_value }}">{{variation.variation_value }}</option>
-													{% endfor %}
-												</select>
-											</div>
-										</div>
+										
 									</div>
+									{% endif %}
 									<div class="box-tocart d-flex">
 										<span>Qty</span>
 										<input id="qty" class="input-text qty" name="qty" min="1" value="1" title="Qty"
@@ -156,57 +169,32 @@
 						</div>
 						<!-- End Single Tab Content -->
 						<!-- Start Single Tab Content -->
+						
+						
 						<div class="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
-							<div class="review__attribute">
-								<h1>Customer Reviews</h1>
-								<h2>Hastech</h2>
-								<div class="review__ratings__type d-flex">
-									<div class="review-ratings">
-										<div class="rating-summary d-flex">
-											<span>Quality</span>
-											<ul class="rating d-flex">
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-											</ul>
-										</div>
+							<h3>Customer Reviews</h3>
 
-										<div class="rating-summary d-flex">
-											<span>Price</span>
-											<ul class="rating d-flex">
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-											</ul>
-										</div>
-										<div class="rating-summary d-flex">
-											<span>value</span>
-											<ul class="rating d-flex">
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-											</ul>
-										</div>
-									</div>
-									<div class="review-content">
-										<p>Hastech</p>
-										<p>Review by Hastech</p>
-										<p>Posted on 11/6/2018</p>
-									</div>
-								</div>
+							{% for review in books.review.all %}
+
+							<div class="review__attribute m-3">
+								
+								<h4>{{review.title}}</h4>
+								<p>{{review.review_text}}</p>
+								<b>Review by: {{review.user.first_name}}</b>
+							
 							</div>
-							<div class="review-fieldset">
-								<h2>You're reviewing:</h2>
-								<h3>Chaz Kangeroo Hoodie</h3>
+							{% endfor %}
+							
+							{% if request.user.is_authenticated %}
+								
+							
+							<form action="{% url 'book_review' books.id %}" method="POST">
+								{% csrf_token %}
+							<div class="review-fieldset col-6">
+								<h2>Write Review</h2>
 								<div class="review-field-ratings">
 									<div class="product-review-table">
-										<div class="review-field-rating d-flex">
+										<!-- <div class="review-field-rating d-flex">
 											<span>Quality</span>
 											<ul class="rating d-flex">
 												<li class="off"><i class="zmdi zmdi-star"></i></li>
@@ -215,131 +203,37 @@
 												<li class="off"><i class="zmdi zmdi-star"></i></li>
 												<li class="off"><i class="zmdi zmdi-star"></i></li>
 											</ul>
-										</div>
-										<div class="review-field-rating d-flex">
-											<span>Price</span>
-											<ul class="rating d-flex">
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-											</ul>
-										</div>
-										<div class="review-field-rating d-flex">
-											<span>Value</span>
-											<ul class="rating d-flex">
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-												<li class="off"><i class="zmdi zmdi-star"></i></li>
-											</ul>
-										</div>
+										</div> -->
+
+					
 									</div>
 								</div>
 								<div class="review_form_field">
 									<div class="input__box">
-										<span>Nickname</span>
-										<input id="nickname_field" type="text" name="nickname">
-									</div>
-									<div class="input__box">
 										<span>Summary</span>
-										<input id="summery_field" type="text" name="summery">
+										{{form.title}}
 									</div>
 									<div class="input__box">
 										<span>Review</span>
-										<textarea name="review"></textarea>
+										{{form.review_text}}
 									</div>
 									<div class="review-form-actions">
-										<button>Submit Review</button>
+										<button type='submit'>Submit Review</button>
 									</div>
 								</div>
 							</div>
+							</form>
+							{% else %}
+							<a href="">You must signin for write review</a>
+							{% endif %}
+
 						</div>
 						<!-- End Single Tab Content -->
 					</div>
 				</div>
-				<div class="wn__related__product pt--80 pb--50">
-					<div class="section__title text-center">
-						<h2 class="title__be--2">Related Products</h2>
-					</div>
-					<div class="row mt--60">
-						<div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
-							<!-- Start Single Product -->
-
-						</div>
-					</div>
-				</div>
-				<div class="wn__related__product">
-
-					<div class="row mt--60">
-						<div class="productcategory__slide--2 arrows_style owl-carousel owl-theme">
-							<!-- Start Single Product -->
-							<div class="col-lg-4 col-md-4 col-sm-6 col-12">
-								<div class="product">
-									<div class="product__thumb">
-										<a class="first__img" href="single-product.html"><img src="images/product/2.jpg"
-												alt="product image"></a>
-										<a class="second__img animation1" href="single-product.html"><img
-												src="images/product/1.jpg" alt="product image"></a>
-										<div class="new__box">
-											<span class="new-label">New</span>
-										</div>
-										<ul class="prize position__right__bottom d-flex">
-											<li>$35.00</li>
-											<li class="old_prize">$38.00</li>
-										</ul>
-										<div class="action">
-											<div class="actions_inner">
-												<ul class="add_to_links">
-													<li><a class="cart" href="cart.html"></a></li>
-													<li><a class="wishlist" href="wishlist.html"></a></li>
-													<li><a class="compare" href="compare.html"></a></li>
-													<li><a data-toggle="modal" title="Quick View"
-															class="quickview modal-view detail-link"
-															href="#productmodal"></a>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-									<div class="product__content">
-										<h4><a href="single-product.html">Crown Summit Backpack</a></h4>
-										<ul class="rating d-flex">
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li><i class="fa fa-star-o"></i></li>
-											<li><i class="fa fa-star-o"></i></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<!-- Start Single Product -->
-
-						</div>
-					</div>
-				</div>
+			
 			</div>
-			<div class="col-lg-3 col-12 md-mt-40 sm-mt-40">
-				<div class="shop__sidebar">
-					<aside class="wedget__categories poroduct--cat">
-						<h3 class="wedget__title">Product Categories</h3>
-						<ul>
-							<li><a href="#">Biography <span>(3)</span></a></li>
-							<li><a href="#">Business <span>(4)</span></a></li>
-							<li><a href="#">Cookbooks <span>(6)</span></a></li>
-							<li><a href="#">Health & Fitness <span>(7)</span></a></li>
-							<li><a href="#">History <span>(8)</span></a></li>
-							<li><a href="#">Mystery <span>(9)</span></a></li>
-							<li><a href="#">Inspiration <span>(13)</span></a></li>
-							<li><a href="#">Romance <span>(20)</span></a></li>
-
-						</ul>
-					</aside>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 </div>

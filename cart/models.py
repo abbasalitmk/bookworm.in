@@ -1,5 +1,5 @@
 from django.db import models
-from dashboard.models import Book, Variation
+from dashboard.models import Book, Variation, BookVariation
 from accounts.models import CustomUser as User
 
 
@@ -17,7 +17,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
-    variations = models.ManyToManyField(Variation, blank=True)
+    variation = models.ManyToManyField(BookVariation, blank=True)
 
     def sub_total(self):
         return self.book.price * self.quantity

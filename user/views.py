@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from accounts.models import CustomUser as User
 from django.contrib import messages
 from django.db.models import Count
-from dashboard.models import Book, Image, Author, Book_Category
+from dashboard.models import Book, Image, Author, Book_Category, Review
 from order.models import Order, Payment, OrderProduct
 from cart.models import Cart, CartItem, Wishlist
 from cart.views import _cart_id
@@ -13,6 +13,11 @@ from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
 from .models import Address
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from dashboard.forms import Review_form
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .forms import CustomPasswordChangeForm
+from django.utils.text import slugify
 
 
 def home(request):
@@ -59,12 +64,12 @@ def category_list(request, cat_name, min_price=None, max_price=None):
     if min_price or max_price:
 
         books = Book.objects.filter(
-            category__name=cat_name, price__gte=min_price, price__lte=max_price)
+            categories__name=cat_name, price__gte=min_price, price__lte=max_price)
     else:
-        books = Book.objects.filter(category__name=cat_name)
+        books = Book.objects.filter(categories__name=cat_name)
 
     category = Book_Category.objects.values(
-        'name').annotate(book_count=Count('book'))
+        'name').annotate(book_count=Count('books'))
 
     context = {
         'books': books,
@@ -92,13 +97,15 @@ def filter_price(request):
 
 
 def book_details(request, title):
-    books = Book.objects.get(title=title)
+
+    books = get_object_or_404(Book, title=title)
     in_cart = CartItem.objects.filter(
         cart__cart_id=_cart_id(request), book=books).exists()
 
     context = {
         'books': books,
         'in_cart': in_cart,
+        'form': Review_form,
 
     }
     return render(request, 'single-product.html', context)
@@ -156,9 +163,10 @@ def my_account(request):
     if request.path == '/my_account/orders':
         return render(request, 'dashboard/my-orders.html', context)
 
-    return render(request, 'dashboard/dashboard.html', context)
+    return render(request, 'dashboard/my-orders.html', context)
 
 
+@ login_required(login_url='login')
 def wishlist(request):
     wishlist = get_object_or_404(Wishlist, user=request.user)
     books = wishlist.book.all()
@@ -166,3 +174,38 @@ def wishlist(request):
         'books': books
     }
     return render(request, 'dashboard/wishlist.html', context)
+
+
+@ login_required(login_url='login')
+def book_review(request, book_id):
+    book = Book.objects.get(id=book_id)
+    if request.method == 'POST':
+        form = Review_form(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.book = book
+            review.user = request.user
+            review.save()
+            return redirect('book-details', title=book.title)
+        else:
+            form = ReviewForm()
+    return HttpResponse('success')
+
+
+@ login_required(login_url='login')
+def password_change_view(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(
+                request, 'Your password was successfully updated!')
+            return redirect('home')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+    return render(request, 'dashboard/change-password.html', {'form': form})
+
+
+def custom_error_page(request, exception):
+    return render(request, '404.html', status=404)

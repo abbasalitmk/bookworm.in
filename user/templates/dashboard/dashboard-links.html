@@ -5,18 +5,17 @@
             <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
         </div>
         <h6 class="f-w-600 p-2">Hello, {{request.user.first_name}}</h6>
-        <a href="#"> <i class="fa fa-power-off fa-2x "></i> </a>
+        <a href="{% url 'logout' %}"> <i class="fa fa-power-off fa-2x "></i> </a>
        
     </div>
 </div>
     <!--   SIDEBAR   -->
     <ul class="list-group">
-        <a class="list-group-item {%if request.path == '/my_account/'%} active {%endif%}" href="{% url 'my_account' %}"> Dashboard </a>
         <a class="list-group-item {%if request.path == '/my_account/orders'%} active {%endif%}" href="{% url 'my_orders' %}"> My Orders </a>
         <a class="list-group-item {%if request.path == '/my_account/wishlist'%} active {%endif%}" href="{% url 'wishlist' %}"> Wishlist </a>
-        <a class="list-group-item" href="#"> Account Info </a>
-        <a class="list-group-item" href="#">Settings </a>
-        <a class="list-group-item" href="#">Change Password </a>
+        <!-- <a class="list-group-item" href="#"> Account Info </a> -->
+        <!-- <a class="list-group-item" href="#">Settings </a> -->
+        <a class="list-group-item {%if request.path == 'password_change'%} active {%endif%}" href="{% url 'password_change'%}">Change Password </a>
     </ul>
     <br>
    

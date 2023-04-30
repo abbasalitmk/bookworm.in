@@ -33,7 +33,7 @@
 
 
 	<!-- Toaster notification -->
-	
+
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="{% static 'toastr.min.js' %}"></script>
 	<link href="{% static 'toastr.min.css' %}" rel="stylesheet">
@@ -58,7 +58,7 @@
 	</script>
 
 
-	
+
 	<!-- Modernizer js -->
 	<script src="{% static 'theme/js/vendor/modernizr-3.5.0.min.js' %}"></script>
 
@@ -88,9 +88,9 @@
 								<li class="drop with--one--item"><a href="{% url 'home' %}">Home</a>
 								</li>
 								<li class="drop"><a href="{% url 'books' %}">Books</a>
-			
+
 								<li class="drop"><a href="#">Bundle Offer</a>
-									
+
 								</li>
 								<li><a href="contact.html">Contact</a></li>
 							</ul>
@@ -99,14 +99,17 @@
 					<div class="col-md-6 col-sm-6 col-6 col-lg-5">
 						<ul class="header__sidebar__right d-flex justify-content-end align-items-center">
 							<form action="{% url 'search' %}" method="GET">
-							<div class="input-group">
-								<input class="form-control border-end-0 border-5 rounded-pill" name='keyword' type="text" placeholder="Search Books" id="example-search-input">
-								<span class="input-group-append">
-									<button type='submit' class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3" type="button">
-										<i class="fa fa-search"></i>
-									</button>
-								</span>
-							</div>
+								<div class="input-group">
+									<input class="form-control border-end-0 border-5 rounded-pill" name='keyword'
+										type="text" placeholder="Search Books" id="example-search-input">
+									<span class="input-group-append">
+										<button type='submit'
+											class="btn btn-outline-secondary bg-white border-start-0 border rounded-pill ms-n3"
+											type="button">
+											<i class="fa fa-search"></i>
+										</button>
+									</span>
+								</div>
 							</form>
 							<!-- {# 
 							{% if request.user.is_authenticated %}
@@ -117,13 +120,19 @@
 							{% endif %}
 							#} -->
 							
+										
 							<li class="wishlist"><a href="{% url 'wishlist' %}"></a></li>
-							<li class="shopcart"><a class="cartbox_active" href="#"><span
+								
+							<a href="{% url 'cart' %}">
+								<li class="shopcart">
+							</a>
+
+							<!-- <span
 										class="product_qun">
 											{% show_cart_items as cart_items %}
 											{{ cart_items|length }}
-										</span></a>
-								<!-- Start Shopping Cart -->
+										</span></a> -->
+							<!-- Start Shopping Cart
 								<div class="block-minicart minicart__active">
 									<div class="minicart-content-wrapper">
 										<div class="micart__close">
@@ -176,58 +185,18 @@
 											<a class="cart__btn" href="{% url 'cart' %}">View and edit cart</a>
 										</div>
 									</div>
-								</div>
-								<!-- End Shopping Cart -->
+								</div> -->
+							<!-- End Shopping Cart -->
 							</li>
 							<li class="setting__bar__icon"><a class="setting__active" href="#"></a>
 								<div class="searchbar__content setting__block">
 									<div class="content-inner">
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
-												<a href=""><span>Currency</span></a>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">USD - US Dollar</span>
-													<ul class="switcher-dropdown">
-														<li>GBP - British Pound Sterling</li>
-														<li>EUR - Euro</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
-												<span>Language</span>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">English01</span>
-													<ul class="switcher-dropdown">
-														<li>English02</li>
-														<li>English03</li>
-														<li>English04</li>
-														<li>English05</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="switcher-currency">
-											<strong class="label switcher-label">
-												<span>Select Store</span>
-											</strong>
-											<div class="switcher-options">
-												<div class="switcher-currency-trigger">
-													<span class="currency-trigger">Fashion Store</span>
-													<ul class="switcher-dropdown">
-														<li>Furniture</li>
-														<li>Shoes</li>
-														<li>Speaker Store</li>
-														<li>Furniture</li>
-													</ul>
-												</div>
-											</div>
-										</div>
+
+
+
+										{% if request.user.is_authenticated %}
+
+
 										<div class="switcher-currency">
 											<strong class="label switcher-label">
 												<span>My Account</span>
@@ -235,16 +204,27 @@
 											<div class="switcher-options">
 												<div class="switcher-currency-trigger">
 													<div class="setting__menu">
-														<span><a href="#">Compare Product</a></span>
 														<span><a href="{% url 'my_account' %}">My Account</a></span>
 														<span><a href="{% url 'wishlist' %}">My Wishlist</a></span>
-														<span><a href="{% url 'login' %}">Sign In</a></span>
-														<span><a href="{% url 'register' %}">Create An Account</a></span>
 														<span><a href="{% url 'logout' %}">Logout</a></span>
 													</div>
 												</div>
 											</div>
 										</div>
+										{% else %}
+										<div class="switcher-currency">
+
+											<div class="switcher-options">
+												<div class="switcher-currency-trigger">
+													<div class="setting__menu">
+														<span><a href="{% url 'login' %}">Signin</a></span>
+
+													</div>
+												</div>
+											</div>
+										</div>
+										{% endif %}
+
 									</div>
 								</div>
 							</li>
@@ -257,15 +237,15 @@
 						<nav class="mobilemenu__nav">
 							<ul class="meninmenu">
 								<li><a href="index.html">Home</a>
-									
+
 								</li>
 								<li><a href="#">Pages</a>
-									
+
 								</li>
 								<li><a href="shop-grid.html">Shop</a>
-									
+
 								</li>
-								
+
 								<li><a href="contact.html">Contact</a></li>
 							</ul>
 						</nav>
@@ -296,7 +276,7 @@
 
 
 		{% block 'content' %}
-			
+
 		{% endblock 'content' %}
 
 
@@ -311,7 +291,7 @@
 									<a href="index.html">
 										<img src="{% static 'theme/logo.png' %}" alt="logo">
 									</a>
-									
+
 								</div>
 								<div class="footer__content">
 									<ul class="social__net social__net--2 d-flex justify-content-center">
@@ -357,7 +337,7 @@
 			</div>
 		</footer>
 		<!-- //Footer Area -->
-		
+
 	</div>
 	<!-- //Main wrapper -->
 
@@ -367,8 +347,10 @@
 	<script src="{% static 'theme/js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'theme/js/plugins.js' %}"></script>
 	<script src="{% static 'theme/js/active.js' %}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-	
+
+
 
 </body>
 

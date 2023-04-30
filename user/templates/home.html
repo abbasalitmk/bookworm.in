@@ -3,6 +3,18 @@
 
 {% block 'content' %}
 
+{% if messages %}
+
+{% for message in messages %}
+
+<script>
+    toastr["{{message.tags}}"]("{{message}}");
+</script>
+
+{% endfor %}
+
+{% endif %}
+    
 
 {% if category %}
 <h2>Books in {{ category.cat_name }} category:</h2>

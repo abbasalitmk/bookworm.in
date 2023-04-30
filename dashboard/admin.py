@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Image, Author, Variation, Coupon, Book_Category, BookVariation
+from .models import Book, Image, Author, Variation, Coupon, Book_Category, BookVariation, Review
 
 
 class ImageInline(admin.TabularInline):
@@ -26,3 +26,4 @@ admin.site.register(Variation)
 admin.site.register(BookVariation)
 admin.site.register(Image)
 admin.site.register(Coupon)
+admin.site.register(Review)

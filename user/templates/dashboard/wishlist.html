@@ -6,7 +6,7 @@
             {% include 'dashboard/dashboard-links.html' %}
             <main class="col-md-9">
 
-                <div class="card card-1">
+                <div class="card">
                     <div class="card-header bg-white">
                         <div class="media flex-sm-row flex-column-reverse justify-content-between  ">
                             <div class="col my-auto">
@@ -15,6 +15,20 @@
 
                         </div>
                     </div>
+
+                        {% if messages %}
+
+                        {% for message in messages %}
+
+                        <script>
+                            toastr["{{message.tags}}"]("{{message}}");
+                        </script>
+
+                        {% endfor %}
+
+                        {% endif %}
+
+
                     <div class="card-body">
                     {% if not books %}
                     <h5 class="text-center">Wishlist is empty</h5>
@@ -25,7 +39,7 @@
                       
                         <div class="row">
                             <div class="col">
-                                <div class="card card-2">
+                                <div class="card">
                                     <div class="card-body">
                                         <div class="media">
                                             <div class="sq align-self-center ">
@@ -42,8 +56,10 @@
                                                     </div>
                                                     
                                                     
-                                                    <div class="col my-auto">
+                                                    <div class="col">
                                                         <a href="{% url 'move_to_cart' book.id %}" class="btn btn-success text-white">Move to Cart</a>
+                                       
+                                                        <a href="{% url 'remove_from_wishlist' book.id %}" class="btn btn-danger text-white">Remove</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -59,119 +75,7 @@
             </main>
         </div> <!-- row.// -->
     </div>
-    <style>
-        p {
-            font-size: 14px;
-            margin-bottom: 7px;
-
-        }
-
-        .small {
-            letter-spacing: 0.5px !important;
-        }
-
-
-        hr {
-            background-color: rgba(248, 248, 248, 0.667);
-        }
-
-
-        .bold {
-            font-weight: 500;
-        }
-
-        .change-color {
-            color: #AB47BC !important;
-        }
-
-        .card-2 {
-            box-shadow: 1px 1px 3px 0px rgb(112, 115, 139);
-
-        }
-
-        .fa-circle.active {
-            font-size: 8px;
-            color: #AB47BC;
-        }
-
-        .fa-circle {
-            font-size: 8px;
-            color: #aaa;
-        }
-
-        .rounded {
-            border-radius: 2.25rem !important;
-        }
-
-
-        .progress-bar {
-            background-color: #AB47BC !important;
-        }
-
-
-        .progress {
-            height: 5px !important;
-            margin-bottom: 0;
-        }
-
-        .invoice {
-            position: relative;
-            top: -70px;
-        }
-
-        .Glasses {
-            position: relative;
-            top: -12px !important;
-        }
-
-        .card-footer {
-            background-color: #AB47BC;
-            color: #fff;
-        }
-
-        h2 {
-            color: rgb(78, 0, 92);
-            letter-spacing: 2px !important;
-        }
-
-        .display-3 {
-            font-weight: 500 !important;
-        }
-
-        @media (max-width: 479px) {
-            .invoice {
-                position: relative;
-                top: 7px;
-            }
-
-            .border-line {
-                border-right: 0px solid rgb(226, 206, 226) !important;
-            }
-
-        }
-
-        @media (max-width: 700px) {
-
-            h2 {
-                color: rgb(78, 0, 92);
-                font-size: 17px;
-            }
-
-            .display-3 {
-                font-size: 28px;
-                font-weight: 500 !important;
-            }
-        }
-
-        .card-footer small {
-            letter-spacing: 7px !important;
-            font-size: 12px;
-        }
-
-        .border-line {
-            border-right: 1px solid rgb(226, 206, 226)
-        }
-    </style>
+    
 
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->

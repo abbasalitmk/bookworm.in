@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from cart.views import add_to_wishlist, move_to_cart
+from django.utils.text import slugify
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -23,7 +25,9 @@ urlpatterns = [
     path('books/filter_price',
          views.filter_price, name='filter_price'),
     path('books/detail/<str:title>', views.book_details, name='book-details'),
-    path('search', views.searchBook, name='search')
+    path('search', views.searchBook, name='search'),
+    path('book_review/<int:book_id>', views.book_review, name='book_review'),
+    path('password_change/', views.password_change_view, name='password_change'),
 
 
 

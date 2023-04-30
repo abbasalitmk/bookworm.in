@@ -5792,6 +5792,14 @@ h3.widget-title-modal {
   margin-bottom: 5px;
 }
 
+.product__info__main .variation_price span {
+  color: #e38d73;
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
 .product__info__main .product-color-label span {
   font-size: 14px;
   font-weight: 500;

@@ -1,7 +1,7 @@
 from django.db import models
 from accounts.models import CustomUser as User
 from dashboard.models import Book
-from cart.models import Variation
+from cart.models import BookVariation
 
 
 class Payment(models.Model):
@@ -63,7 +63,7 @@ class OrderProduct(models.Model):
     payment = models.ForeignKey(
         Payment, on_delete=models.SET_NULL, null=True, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    variations = models.ManyToManyField(Variation, blank=True)
+    variation = models.ManyToManyField(BookVariation, blank=True)
     quantity = models.CharField(max_length=50)
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -17,20 +17,45 @@ import math
 from django.contrib import messages
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
+def order_now(request):
+    if request.method == 'POST':
+        address = request.POST['address']
+        payment_method = request.POST['payment_method']
+
+    return HttpResponse(address)
 
 
+@csrf_exempt
+@ login_required(login_url='login')
 def place_order(request, total=0, quantity=0, cart_items=None, delivery_charge=0, sub_total=0):
+
     context = {}
+    variation_price = 0
+    paperback_price = 0
 
     current_user = request.user
     cart_item = CartItem.objects.filter(user=current_user)
 
     for item in cart_item:
-        total += (item.book.price * item.quantity)
-        quantity += item.quantity
-        sub_total += item.book.price
+        if item.variation:
+            try:
+                variation = item.variation.get()
+                price = variation.price
+                variation_price += (price * item.quantity)
+            # variation_price = item.variation.price
+            # cart_total += (book_price * item.quantity)
+            except:
+
+                paperback_price += (item.book.price * item.quantity)
+            quantity += item.quantity
+
+        total = variation_price + paperback_price
 
     if total < 500:
         delivery_charge = 45
@@ -115,6 +140,11 @@ def place_order(request, total=0, quantity=0, cart_items=None, delivery_charge=0
             'payment_capture': '1',  # auto-capture payment
         })
 
+        if razor_order['status'] != 'created':
+            messages.error(
+                request, 'Error processing payment. Please try again later.')
+            return redirect('checkout')
+
         order.provider_order_id = razor_order['id']
         order.order_total = razor_order['amount']/100
 
@@ -143,38 +173,28 @@ def place_order(request, total=0, quantity=0, cart_items=None, delivery_charge=0
 
 @csrf_exempt
 def payment(request):
-
-    try:
-        del request.session['discount']
-    except:
-        pass
-
     if request.method == 'POST':
         razorpay_payment_id = request.POST['razorpay_payment_id']
         razorpay_order_id = request.POST['razorpay_order_id']
         razorpay_signature = request.POST['razorpay_signature']
-
         # Verify Signature
         signature = hmac.new(bytes(settings.RAZOR_KEY_SECRET, 'utf-8'), msg=bytes(
             f"{razorpay_order_id}|{razorpay_payment_id}", 'utf-8'), digestmod=hashlib.sha256)
         generated_signature = signature.hexdigest()
         if generated_signature != razorpay_signature:
             messages.error(request, 'Invalid Payment Request')
-
         # Verify Payment
         client = razorpay.Client(
             auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
         razor_payment = client.payment.fetch(razorpay_payment_id)
-
         if razor_payment['status'] != 'captured':
             messages.error(request, 'Payment Not Captured')
+            return redirect('checkout')
         else:
             # Update payment status and create payment object
             order = Order.objects.get(
                 provider_order_id=request.POST['razorpay_order_id'])
-
             amount = round(order.order_total)
-
             payment_model = Payment.objects.create(
                 user=request.user,
                 payment_id=request.POST['razorpay_payment_id'],
@@ -182,15 +202,12 @@ def payment(request):
                 amount_paid=amount,
                 status='Success'
             )
-
             # Update order status and create order object
-
             order.status = 'Accepted'
             order.payment = payment_model
             order.is_ordered = True
             order.order_total = amount
             order.save()
-
             # Create order product object(s)
             cart_items = CartItem.objects.filter(user=request.user)
             for item in cart_items:
@@ -203,31 +220,45 @@ def payment(request):
                 )
                 order_product.save()
                 # set the variations for this OrderProduct
-                order_product.variations.set(item.variations.all())
+                order_product.variation.set(item.variation.all())
                 order_product.save()
-
                 # Decrease book quantity
-                book = Book.objects.get(id=item.book_id)
-                book.stock -= item.quantity
-                book.save()
+            book = Book.objects.get(id=item.book_id)
+            book.stock -= item.quantity
+            book.save()
+            # Clear cart
+            CartItem.objects.filter(user=request.user).delete()
+            context = {
+                'products': OrderProduct.objects.filter(order=order)
+            }
 
-                # Clear cart
-                CartItem.objects.filter(user=request.user).delete()
-                context = {
-                    'products': OrderProduct.objects.filter(order=order)
-                }
+            # send email to user when order confirmed
+            subject = 'Order Confirmation'
+            message = 'Thank you for your order. Your order has been confirmed.'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [order.email]
 
-                return redirect('order_confirmed')
+            context = {
+                'customer_name': order.first_name,
 
+            }
+            html_message = render_to_string('email_template.html', context)
+
+            send_mail(subject, '', email_from,
+                      recipient_list, fail_silently=False, html_message=html_message,)
+
+            return redirect('order_confirmed')
     else:
         return HttpResponse("invalid payment method")
 
 
 @csrf_exempt
 def order_confirmed(request):
+
     return render(request, 'order_success.html')
 
 
+@ login_required(login_url='login')
 def cash_on_delivery(request, order_number):
     try:
         order = Order.objects.get(order_number=order_number)
@@ -260,29 +291,48 @@ def cash_on_delivery(request, order_number):
                 book=item.book,
                 quantity=item.quantity,
             )
+
             order_product.save()
             # set the variations for this OrderProduct
-            order_product.variations.set(item.variations.all())
+            order_product.variation.set(item.variation.all())
             order_product.save()
 
-            # Decrease book quantity
-            book = Book.objects.get(id=item.book_id)
-            book.stock -= item.quantity
-            book.save()
+        # Decrease book quantity
+        book = Book.objects.get(id=item.book_id)
+        book.stock -= item.quantity
+        book.save()
 
-            # Clear cart
-            CartItem.objects.filter(user=request.user).delete()
+        # Clear cart
+        CartItem.objects.filter(user=request.user).delete()
+        messages.success(request, 'Order placed successfully')
 
-            return redirect('confirm_order')
+        # send mail to uer when order complete
+        subject = 'Order Confirmation'
+        message = 'Thank you for your order. Your order has been confirmed.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [order.email]
+
+        context = {
+            'customer_name': order.first_name,
+
+        }
+        html_message = render_to_string('email_template.html', context)
+
+        send_mail(subject, '', email_from,
+                  recipient_list, fail_silently=False, html_message=html_message,)
+
+        return redirect('order_confirmed')
     except:
-        return HttpResponse('Invalid payment method')
+        messages.error(request, 'Error, Invlaid Payment')
+        return redirect('checkout')
 
 
+@ login_required(login_url='login')
 def cancel_order(request, order_number):
     order = Order.objects.get(order_number=order_number)
     payment_model = Payment.objects.get(order=order)
     if order.payment.status == 'Success':
-        if payment_model.payment_method == 'cod':
+        if payment_model.payment_method == 'COD':
             order.status = 'Cancelled'
             order.save()
             payment_model.status = 'Cancelled'
@@ -331,6 +381,7 @@ def cancel_order(request, order_number):
         return redirect('my_orders')
 
 
+@ login_required(login_url='login')
 def generate_invoice(request, order_number):
     order = Order.objects.get(order_number=order_number)
 

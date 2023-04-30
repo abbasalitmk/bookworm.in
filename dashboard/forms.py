@@ -1,6 +1,7 @@
 from django import forms
 from .models import Book, Book_Category, BookVariation, Author, Image, Coupon
 from django.forms import DateInput
+from .models import Review
 
 
 class BookForm(forms.ModelForm):
@@ -75,3 +76,10 @@ class GetYear(forms.Form):
         attrs={'type': 'date', 'class': 'form-control', }))
     end_date = forms.DateField(input_formats=['%Y'], widget=forms.widgets.DateInput(
         attrs={'type': 'date', 'class': 'form-control', }))
+
+
+class Review_form(forms.ModelForm):
+
+    class Meta:
+        model = Review
+        fields = ['title', 'review_text']

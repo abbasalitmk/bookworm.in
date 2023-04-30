@@ -91,56 +91,86 @@
 
 				
 
-			
+		
 				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 				<script>
 					var options = {
 						"key": "{{ razorpay_key_id }}", // Enter the Key ID generated from the Dashboard
 						"amount": "{{ razorpay_amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
 						"currency": "INR",
-						"name": "Acme Corp",
-						"description": "Test Transaction",
-						"image": "https://example.com/your_logo",
-						"order_id": "{{ razorpay_order_id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-						"callback_url": "{% url 'verify_payment' %}",
+						"name": "Bookworm LLP",
+						"description": "Payment for book",
+						"image": "https://bookworm.in",
+						"order_id": "{{ razorpay_order_id }}", 
+						"handler": function (response) {
+							 $.ajax({
+								type: "POST",
+								url: "{% url 'verify_payment' %}",
+								data: {
+									razorpay_payment_id: response.razorpay_payment_id,
+									razorpay_order_id: response.razorpay_order_id,
+									razorpay_signature: response.razorpay_signature,
+									csrfmiddlewaretoken: "{{ csrf_token }}"
+								},
+								success: function (data) {
+									// Handle success response
+									// Redirect to success page
+									window.location.href = "{% url 'order_confirmed' %}";
+								},
+								error: function (data) {
+									 // Handle error response
+									 // Redirect to error page
+									 	rzp1.close();
+									Swal.fire({
+										icon: 'error',
+										title: 'Payment failed',
+										text: 'Your payment could not be processed. Please try again.',
+										timer: 4000,
+										timerProgressBar: true,
+										showConfirmButton: false
+									}).then(function () {
+										// Redirect to checkout page
+										window.location.href = "{% url 'checkout' %}";
+									});
+								 }
+							
+							});
+							
+						},
+						// "callback_url": "{% url 'verify_payment' %}",
 						"prefill": {
-							"name": "Gaurav Kumar",
-							"email": "gaurav.kumar@example.com",
-							"contact": "9000090000"
+							"name": "{{order_item.first_name}}",
+							"email": "{{order_item.email}}",
+							"contact": "{{order_item.phone}}"
 						},
 						"notes": {
-							"address": "Razorpay Corporate Office"
+							"address": "{{order_item.address_line1}}"
 						},
 						"theme": {
-							"color": "#3399cc"
+							"color": "#F37254"
 						}
 					};
 					var rzp1 = new Razorpay(options);
+					rzp1.on('payment.failed', function (response) {
+						rzp1.close();
+						Swal.fire({
+							icon: 'error',
+							title: 'Payment failed',
+							text: 'Your payment could not be processed. Please try again.',
+							timer: 4000,
+							timerProgressBar: true,
+							showConfirmButton: false
+						}).then(function () {
+							// Redirect to checkout page
+							window.location.href = "{% url 'checkout' %}";
+						});
+
+						});
 					document.getElementById('rzp-button1').onclick = function (e) {
 						rzp1.open();
 						e.preventDefault();
 					}
 				</script>
-
-
-				<!-- <form action=" method="POST">
-				<script src="https://checkout.razorpay.com/v1/checkout.js" 
-					data-key="{{ razorpay_key_id }}"
-					data-amount="{{ razorpay_amount }}" 
-					data-currency="INR" 
-					data-name="Bookstore"
-					data-description="Payment for books"
-					data-image="{{ request.scheme }}://{{ request.get_host }}/static/img/logo.png"
-					data-prefill.name="{{ request.user.get_full_name }}" 
-					data-prefill.email="{{ request.user.email }}"
-					data-theme.color="#F37254">
-					</script>
-									{% csrf_token %}
-
-				<input type="hidden" name="razorpay_order_id" value="{{ razor_order.id }}">
-				<input type="hidden" name="grand_total" value="{{ grand_total }}">
-				<input type="submit" value="Pay">
-			</form> -->
 
 			</div>
 		</div>

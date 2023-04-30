@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 import math
-from dashboard.models import Book, Variation, Coupon
+from dashboard.models import Book, Variation, Coupon, BookVariation
 from .models import Cart, CartItem, Wishlist
 from user.models import Address
 from django.http import HttpResponse
@@ -24,22 +24,22 @@ def add_cart(request, book_id):
     if user.is_authenticated:
         variations = []
         if request.method == 'POST':
+
             for item in request.POST:
                 key = item
                 value = request.POST[key]
                 try:
-                    variation = Variation.objects.get(
-                        variation_category__iexact=key,
-                        variation_value__iexact=value,
+                    variation = BookVariation.objects.get(
+                        variation_type__iexact=value,
                         book__id=book_id
                     )
                     variations.append(variation)
-                except Variation.DoesNotExist:
+                except BookVariation.DoesNotExist:
                     pass
 
         cart_item = None
         for item in user.cartitem_set.filter(book=book, is_active=True):
-            if set(item.variations.all()) == set(variations):
+            if set(item.variation.all()) == set(variations):
                 cart_item = item
                 cart_item.quantity += 1
                 cart_item.save()
@@ -48,7 +48,7 @@ def add_cart(request, book_id):
         if not cart_item:
             cart_item = CartItem.objects.create(
                 book=book, user=user, quantity=1)
-            cart_item.variations.add(*variations)
+            cart_item.variation.add(*variations)
             cart_item.save()
 
         return redirect('cart')
@@ -60,13 +60,12 @@ def add_cart(request, book_id):
                 key = item
                 value = request.POST[key]
                 try:
-                    variation = Variation.objects.get(
-                        variation_category__iexact=key,
-                        variation_value__iexact=value,
+                    variation = BookVariation.objects.get(
+                        variation_type__iexact=value,
                         book__id=book_id
                     )
                     variations.append(variation)
-                except Variation.DoesNotExist:
+                except BookVariation.DoesNotExist:
                     pass
 
         try:
@@ -77,7 +76,7 @@ def add_cart(request, book_id):
 
         cart_item = None
         for item in cart.cartitem_set.filter(book=book, is_active=True):
-            if set(item.variations.all()) == set(variations):
+            if set(item.variation.all()) == set(variations):
                 cart_item = item
                 cart_item.quantity += 1
                 cart_item.save()
@@ -86,7 +85,7 @@ def add_cart(request, book_id):
         if not cart_item:
             cart_item = CartItem.objects.create(
                 book=book, cart=cart, quantity=1)
-            cart_item.variations.add(*variations)
+            cart_item.variation.add(*variations)
             cart_item.save()
 
         return redirect('cart')
@@ -117,6 +116,9 @@ def delete_Cart(request, cart_item_id):
 
 def cart(request, total=0, quantity=0, cart_items=None, delivery_charge=0):
     context = {}
+    variation_price = 0
+    paperback_price = 0
+
     try:
         if request.user.is_authenticated:
             cart_item = CartItem.objects.filter(
@@ -127,8 +129,20 @@ def cart(request, total=0, quantity=0, cart_items=None, delivery_charge=0):
             cart_item = CartItem.objects.filter(cart=cart, is_active=True)
 
         for item in cart_item:
-            total += (item.book.price * item.quantity)
+            if item.variation:
+                try:
+                    variation = item.variation.get()
+                    price = variation.price
+                    variation_price += (price * item.quantity)
+                # variation_price = item.variation.price
+                # cart_total += (book_price * item.quantity)
+                except:
+
+                    paperback_price += (item.book.price * item.quantity)
+
             quantity += item.quantity
+
+        total = variation_price + paperback_price
 
         if total < 500:
             delivery_charge = 45
@@ -136,12 +150,15 @@ def cart(request, total=0, quantity=0, cart_items=None, delivery_charge=0):
             delivery_charge = 0
 
         gst = (total * 5)/100
+        grand_total = math.ceil(total+gst+delivery_charge)
+
         context = {
             'cart_item': cart_item,
             'total': total,
             'quantity': quantity,
             'delivery_charge': delivery_charge,
-            'gst': gst
+            'gst': gst,
+            'grand_total': grand_total
         }
 
     except Cart.DoesNotExist:
@@ -150,7 +167,7 @@ def cart(request, total=0, quantity=0, cart_items=None, delivery_charge=0):
     return render(request, 'cart.html', context)
 
 
-@ login_required(login_url='login')
+@login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items=None, delivery_charge=0, sub_total=0):
     address = Address.objects.filter(user=request.user)
     cart_item = CartItem.objects.filter(user=request.user)
@@ -158,14 +175,26 @@ def checkout(request, total=0, quantity=0, cart_items=None, delivery_charge=0, s
         return redirect('cart')
 
     context = {}
+    variation_price = 0
+    paperback_price = 0
+
     try:
         user = request.user
         cart_item = CartItem.objects.filter(user=user, is_active=True)
 
         for item in cart_item:
-            total += (item.book.price * item.quantity)
+            if item.variation:
+                try:
+                    variation = item.variation.get()
+                    price = variation.price
+                    variation_price += (price * item.quantity)
+                # variation_price = item.variation.price
+                # cart_total += (book_price * item.quantity)
+                except:
+
+                    paperback_price += (item.book.price * item.quantity)
             quantity += item.quantity
-            sub_total += item.book.price
+        total = variation_price + paperback_price
 
         if total < 500:
             delivery_charge = 45
@@ -199,6 +228,7 @@ def checkout(request, total=0, quantity=0, cart_items=None, delivery_charge=0, s
     return render(request, 'checkout.html', context)
 
 
+@login_required(login_url='login')
 def order_summary(request, total=0, quantity=0, cart_items=None, delivery_charge=0, sub_total=0):
     context = {}
 
@@ -241,6 +271,7 @@ def order_summary(request, total=0, quantity=0, cart_items=None, delivery_charge
     return render(request, 'order_summary.html', context)
 
 
+@ login_required(login_url='login')
 def apply_coupon(request):
     try:
         del request.session['discount']
@@ -268,16 +299,32 @@ def apply_coupon(request):
 def add_to_wishlist(request, books_id):
     user = request.user
     book = Book.objects.get(id=books_id)
+
     try:
         wishlist = Wishlist.objects.get(user=user)
-        created = False
+        if wishlist.book.filter(id=book.id).exists():
+            messages.error(request, 'Book already in wishlist')
+        else:
+            wishlist.book.add(book)
+            messages.success(request, 'Added to wishlist')
     except Wishlist.DoesNotExist:
         wishlist = Wishlist.objects.create(user=user)
         created = True
-    wishlist.book.add(book)
+        wishlist.book.add(book)
+        messages.success(request, 'Added to wishlist')
+    return redirect('book-details', title=book.title)
+
+
+@ login_required(login_url='login')
+def remove_from_wishlist(request, book_id):
+    book = Book.objects.get(id=book_id)
+    wishlist = Wishlist.objects.get(user=request.user)
+    wishlist.book.remove(book)
+    messages.warning(request, "Book removed from wishlist")
     return redirect('wishlist')
 
 
+@ login_required(login_url='login')
 def move_to_cart(request, book_id):
     wishlist = Wishlist.objects.get(user=request.user)
     book = wishlist.book.get(id=book_id)

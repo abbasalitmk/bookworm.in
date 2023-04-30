@@ -1,0 +1,26 @@
+{% extends 'theme.html' %}
+{% block 'content' %}
+{% load static %}
+
+<!-- End Bradcaump area -->
+
+<!-- Start Error Area -->
+<section class="page_error section-padding--lg bg--white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12"> 
+                <div class="error__inner text-center">
+                    <div class="error__logo">
+                        <a href="#"><img src="https://i.postimg.cc/rmN5T3Gq/istockphoto-1179991026-612x612.jpg" alt="not found images"></a>
+                    </div>
+                    <div class="error__content">
+                        <h2>Page not found</h2>
+                        <p>It looks like you are lost! Try back to home</p>
+                        <a href="{% url 'home' %}" class="btn btn-default">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Error Area -->
+{% endblock 'content' %}
