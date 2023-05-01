@@ -63,11 +63,11 @@
 					<aside class="wedget__categories poroduct--cat">
 						<h3 class="wedget__title">Product Categories</h3>
 						<ul>
+				
+							{% for link in category_links %}
 
-							{% for cat in category %}
-
-							<li><a href="{% url 'category_list' cat.name %}">
-									{{cat.name}}<span>({{cat.num_books}})</span></a></li>
+							<li><a href="{% url 'category_list' link.name %}">
+									{{link.slug}}<span>({{link.count_book}})</span></a></li>
 
 							{% endfor %}
 

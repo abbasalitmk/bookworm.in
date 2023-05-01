@@ -18,6 +18,7 @@ class Book_Category(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2)
+
     discount = models.DecimalField(max_digits=8, decimal_places=2)
     publishing_date = models.DateField()
     description = models.TextField()

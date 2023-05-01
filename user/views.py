@@ -60,7 +60,6 @@ def list_book(request,):
 
 
 def category_list(request, cat_name, min_price=None, max_price=None):
-
     if min_price or max_price:
 
         books = Book.objects.filter(
