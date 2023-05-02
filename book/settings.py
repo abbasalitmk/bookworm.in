@@ -1,5 +1,8 @@
+
 from pathlib import Path, os
 from dotenv import load_dotenv
+from storages.backends.s3boto3 import S3Boto3Storage
+
 
 load_dotenv()
 
@@ -27,8 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
-
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     'dashboard',
     'cart',
     'order',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'book.urls'
@@ -91,8 +95,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': '',
+        'HOST': os.getenv('DB_HOST'),  'PORT': '',
     }
 }
 
@@ -125,7 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -147,10 +149,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'templates/static/admin',
 
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -180,14 +180,27 @@ RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID')
 
 RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET')
 
+S3_ENABLED = False
 
-# amazone s3 configuration
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID ')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_SIGNATURE_NAME = os.getenv('s3v4')
-AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_S3_VERITY = True
-DEFAULT_FILE_STORAGE = os.getenv('storages.backends.s3boto3.S3Boto3Storage')
+if S3_ENABLED:
+    # amazone s3 configuration
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_SIGNATURE_NAME = os.getenv('s3v4')
+    AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+    AWS_S3_VERITY = True
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    MEDIA_LOCATION = 'media'
+
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{MEDIA_LOCATION}/'
+    MEDIA_ROOT = None
+    MEDIA_FILE_STORAGE = S3Boto3Storage(location=MEDIA_LOCATION)
+
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+    MEDIA_URL = '/media/'
