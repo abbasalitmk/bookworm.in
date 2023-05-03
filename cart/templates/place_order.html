@@ -14,10 +14,12 @@
 				</div>
 			</div>
 		</div>
+		<h2 class="text-center" style="margin-bottom: 2rem;">Review your order</h2>
+
 		<div class="row">
 			<div class="col-lg-6 col-12">
 				<div class="customer_details">
-					<h3>Review your order</h3>
+
 					<div class="customar__field">
 
 
@@ -37,12 +39,9 @@
 								{% endfor %}
 
 							</div>
-								
+
 						</div>
-						<div class="mt-5">
-						<a href="{% url 'cash_on_delivery' order_number %}" class="btn btn-info" id="">Cash on Delivery</a>
-						<button class="btn btn-danger" id="rzp-button1">Pay with Razorpay</button>
-						</div>
+
 					</div>
 				</div>
 			</div>
@@ -88,10 +87,18 @@
 						<li>Order Total <span>₹{{grand_total}}</span></li>
 					</ul>
 				</div>
+				<div class="mt-5 d-flex justify-content-center">
 
-				
+					<a href="{% url 'cash_on_delivery' order_number %}" class="btn-lg btn btn-info mr-1" id=""><i
+							class="m-2 fa fa-money-bill-1-wave"></i>Cash on Delivery</a>
 
-		
+
+					<button class="btn btn-lg btn-warning ml-1" id="rzp-button1"><i class="m-2 fa fa-credit-card"></i>
+						Online
+						Payment</button>
+
+				</div>
+
 				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 				<script>
 					var options = {
@@ -101,9 +108,9 @@
 						"name": "Bookworm LLP",
 						"description": "Payment for book",
 						"image": "https://bookworm.in",
-						"order_id": "{{ razorpay_order_id }}", 
+						"order_id": "{{ razorpay_order_id }}",
 						"handler": function (response) {
-							 $.ajax({
+							$.ajax({
 								type: "POST",
 								url: "{% url 'verify_payment' %}",
 								data: {
@@ -118,9 +125,9 @@
 									window.location.href = "{% url 'order_confirmed' %}";
 								},
 								error: function (data) {
-									 // Handle error response
-									 // Redirect to error page
-									 	rzp1.close();
+									// Handle error response
+									// Redirect to error page
+									rzp1.close();
 									Swal.fire({
 										icon: 'error',
 										title: 'Payment failed',
@@ -132,10 +139,10 @@
 										// Redirect to checkout page
 										window.location.href = "{% url 'checkout' %}";
 									});
-								 }
-							
+								}
+
 							});
-							
+
 						},
 						// "callback_url": "{% url 'verify_payment' %}",
 						"prefill": {
@@ -165,7 +172,7 @@
 							window.location.href = "{% url 'checkout' %}";
 						});
 
-						});
+					});
 					document.getElementById('rzp-button1').onclick = function (e) {
 						rzp1.open();
 						e.preventDefault();

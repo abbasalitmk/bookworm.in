@@ -8522,7 +8522,7 @@ a.checkout__title {
 -------------------------*/
 .ft__logo {
   margin: 0 auto 25px;
-  max-width: 615px;
+  max-width: 300px;
 }
 
 .social__net {
@@ -8544,7 +8544,7 @@ a.checkout__title {
 .footer-static-top {
   background: #ffffff none repeat scroll 0 0;
   border-bottom: 1px solid #ebebeb;
-  padding: 70px 0;
+  padding: 10px 0;
   text-align: center;
 }
 

@@ -1,0 +1,95 @@
+{% extends 'theme.html' %}
+
+{% block 'content' %}
+<section class="section-conten padding-y bg" style="margin-top: 20vh;">
+    <div class="container">
+        <div class="row">
+            {% include 'dashboard/dashboard-links.html' %}
+            <main class="col-md-9">
+                <header class="card-header mb-3">
+                    <h5>Add Address</h5>
+                </header>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                <label for="{{ form.first_name.id_for_label }}">First name:</label>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                <label for="{{ form.last_name.id_for_label }}">Last name:</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.phone.id_for_label }}">Phone:</label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">Email:</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="{{ form.address_line1.id_for_label }}">Address line 1:</label>
+                                {{ form.address_line1 }}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="{{ form.address_line2.id_for_label }}">Address line 2:</label>
+                                {{ form.address_line2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.city.id_for_label }}">City:</label>
+                                {{ form.city }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.state.id_for_label }}">State:</label>
+                                {{ form.state }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.pincode.id_for_label }}">Pincode:</label>
+                                {{ form.pincode }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.country.id_for_label }}">Country:</label>
+                                {{ form.country }}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Create Address</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+</section>
+{% endblock 'content' %}

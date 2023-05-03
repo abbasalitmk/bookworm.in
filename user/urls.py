@@ -7,6 +7,13 @@ from django.utils.text import slugify
 urlpatterns = [
     path('', views.home, name='home'),
     path('my_account/', views.my_account, name='my_account'),
+    path('my_account/address', views.view_addresses, name='view_addresses'),
+    path('my_account/address/add', views.create_address, name='create_address'),
+    path('my_account/address/edit/<int:address_id>',
+         views.edit_address, name='edit_address'),
+
+    path('my_account/address/delete/<int:address_id>',
+         views.delete_address, name='delete_address'),
     path('my_account/orders', views.my_account, name='my_orders'),
     path('my_account/wishlist', views.wishlist, name='wishlist'),
     path('my_account/wishlist/add/<int:books_id>',

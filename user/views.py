@@ -18,10 +18,14 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from .forms import CustomPasswordChangeForm
 from django.utils.text import slugify
+from .forms import AddressForm
+from .models import Address
+from django.urls import reverse
 
 
 def home(request):
-    books = Book.objects.all()
+    books = Book.objects.all().order_by('-publishing_date')
+    deal_books = Book.objects.all().order_by('-discount')
 
     return render(request, 'home.html', {'books': books})
 
@@ -208,3 +212,46 @@ def password_change_view(request):
 
 def custom_error_page(request, exception):
     return render(request, '404.html', status=404)
+
+
+@login_required
+def create_address(request):
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            next_url = request.GET.get('next', reverse('view_addresses'))
+            return redirect(next_url)
+    else:
+        form = AddressForm()
+    return render(request, 'dashboard/address_create.html', {'form': form})
+
+
+@login_required
+def view_addresses(request):
+    addresses = Address.objects.filter(user=request.user)
+    context = {'addresses': addresses}
+    return render(request, 'dashboard/addresses.html', context)
+
+
+@login_required
+def edit_address(request, address_id):
+    address = get_object_or_404(Address, pk=address_id, user=request.user)
+    if request.method == 'POST':
+        form = AddressForm(request.POST, instance=address)
+        if form.is_valid():
+            form.save()
+            return redirect('view_addresses')
+    else:
+        form = AddressForm(instance=address)
+    context = {'form': form, 'address_id': address_id}
+    return render(request, 'dashboard/edit_address.html', context)
+
+
+@login_required
+def delete_address(request, address_id):
+    address = get_object_or_404(Address, pk=address_id, user=request.user)
+    address.delete()
+    return redirect('view_addresses')

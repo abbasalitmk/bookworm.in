@@ -15,7 +15,8 @@
         <a class="list-group-item {%if request.path == '/my_account/wishlist'%} active {%endif%}" href="{% url 'wishlist' %}"> Wishlist </a>
         <!-- <a class="list-group-item" href="#"> Account Info </a> -->
         <!-- <a class="list-group-item" href="#">Settings </a> -->
-        <a class="list-group-item {%if request.path == 'password_change'%} active {%endif%}" href="{% url 'password_change'%}">Change Password </a>
+        <a class="list-group-item {%if request.path == '/my_account/address'%} active {%endif%}" href="{% url 'view_addresses' %}"> Address</a>
+        <a class="list-group-item {%if request.path == '/password_change/'%} active {%endif%}" href="{% url 'password_change'%}">Change Password </a>
     </ul>
     <br>
    

@@ -27,8 +27,8 @@
     <link rel="stylesheet" href="{% static 'assets/css/semi-dark.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/css/header-colors.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js"
+        integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <title>Bookworm | Admin Dashboard</title>
 </head>
 
@@ -49,7 +49,7 @@
             <!--navigation-->
             <ul class="metismenu">
                 <li>
-                    <a href="{% url 'home' %}" >
+                    <a href="{% url 'home' %}">
                         <div class="parent-icon"><i class='bx bx-home-alt'></i>
                         </div>
                         <div class="menu-title">Dashboard</div>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="menu-title">Category</div>
                     </a>
-                   
+
                 </li>
 
                 <li>
@@ -97,7 +97,7 @@
                     </a>
 
                 </li>
-               
+
                 <li>
                     <a class="has-arrow" href="{% url 'coupons' %}">
                         <div class="parent-icon"><i class='bx bxs-coupon'></i>
@@ -121,23 +121,20 @@
                     <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
                     </div>
 
-                   
+
 
                     <div class="top-menu ms-auto">
                         <ul class="navbar-nav align-items-center gap-1">
-                           
+
                             <li class="nav-item dark-mode d-none d-sm-flex">
                                 <a class="nav-link dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i>
                                 </a>
                             </li>
 
-                          
+
 
                             <li class="nav-item dropdown dropdown-large">
-                                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#"
-                                    data-bs-toggle="dropdown"><span class="alert-count">7</span>
-                                    <i class='bx bx-bell'></i>
-                                </a>
+
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="javascript:;">
                                         <div class="msg-header">
@@ -275,15 +272,15 @@
                                 </div>
                             </li>
                             <li class="nav-item dropdown dropdown-large">
-                                
+
                                 <div class="dropdown-menu dropdown-menu-end">
-                               
+
                                     <div class="header-message-list">
-                                       
-                               
-                                 
+
+
+
                                     </div>
-                                   
+
                                 </div>
                             </li>
                         </ul>
@@ -291,21 +288,22 @@
                     <div class="user-box dropdown px-3">
                         <a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
                             href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}" class="user-img" alt="user avatar">
+                            <img src="{% static 'admin/assets/images/avatars/avatar-1.png' %}" class="user-img"
+                                alt="user avatar">
                             <div class="user-info">
                                 <p class="user-name mb-0">{{request.user.first_name}}</p>
-                                
+
                                 {% if request.user.is_useruser %}
-                                    <p class="designattion mb-0">Super User</p>
+                                <p class="designattion mb-0">Super User</p>
                                 {% else %}
-                                    <p class="designattion mb-0">Admin</p>
+                                <p class="designattion mb-0">Admin</p>
                                 {% endif %}
-                                    
-                                
+
+
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            
+
                             <li><a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}"><i
                                         class="bx bx-log-out-circle"></i><span>Logout</span></a>
                             </li>
@@ -420,7 +418,7 @@
 
 
     <!--start switcher-->
-    <div class="switcher-wrapper">
+    <!-- <div class="switcher-wrapper">
         <div class="switcher-btn"> <i class='bx bx-cog bx-spin'></i>
         </div>
         <div class="switcher-body">
@@ -513,7 +511,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!--end switcher-->
     <!-- Bootstrap JS -->
     <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
