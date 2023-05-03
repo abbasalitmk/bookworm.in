@@ -99,9 +99,9 @@ def filter_price(request):
     return render(request, 'books.html', context)
 
 
-def book_details(request, title):
+def book_details(request, slug):
 
-    books = get_object_or_404(Book, title=title)
+    books = get_object_or_404(Book, slug=slug)
     in_cart = CartItem.objects.filter(
         cart__cart_id=_cart_id(request), book=books).exists()
 

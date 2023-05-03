@@ -312,7 +312,7 @@ def add_to_wishlist(request, books_id):
         created = True
         wishlist.book.add(book)
         messages.success(request, 'Added to wishlist')
-    return redirect('book-details', title=book.title)
+    return redirect('book-details', slug=book.slug)
 
 
 @ login_required(login_url='login')

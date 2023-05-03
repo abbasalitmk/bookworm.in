@@ -70,16 +70,16 @@
             <div class="product product__style--3">
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="product__thumb">
-                        <a class="first__img" href={% url 'book-details' book.title %}><img
+                        <a class="first__img" href={% url 'book-details' book.slug %}><img
                                 src="{{image.url.url}}" alt="product image"></a>
-                        <a class="second__img animation1" href={% url 'book-details' book.title %}><img
+                        <a class="second__img animation1" href={% url 'book-details' book.slug %}><img
                                 src="{{image.url.url}}" alt="product image"></a>
                         <div class="hot__box">
                             <span class="hot-label">BEST SELLER</span>
                         </div>
                     </div>
                     <div class="product__content content--center">
-                        <h4><a href={% url 'book-details' book.title %}>{{book.title}}</a></h4>
+                        <h4><a href={% url 'book-details' book.slug %}>{{book.title}}</a></h4>
                         <ul class="prize d-flex">
                             <li>₹{{ book.price}}</li>
                             <li class="old_prize">{{book.discount}}</li>
@@ -89,7 +89,7 @@
                                 <ul class="add_to_links">
                                     <li><a class="cart" href="{% url 'add_cart' book.id %}"><i class="bi bi-shopping-bag4"></i></a></li>
                                     <li><a class="wishlist" href="{% url 'add_to_wishlist' book.id %}"><i
-                                                class="bi bi-shopping-cart-full"></i></a></li>
+                                                class="bi bi-love"></i></a></li>
                         
                                 </ul>
                             </div>
@@ -132,14 +132,14 @@
             <div class="product product__style--3">
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="product__thumb">
-                        <a class="first__img" href="{% url 'book-details' book.title %}"><img src="{{image.url.url}}"
+                        <a class="first__img" href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
                                 alt="product image"></a>
-                        <a class="second__img animation1" href="{% url 'book-details' book.title %}"><img src="{{image.url.url}}"
+                        <a class="second__img animation1" href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
                                 alt="product image"></a>
                     
                     </div>
                     <div class="product__content content--center">
-                        <h4><a href="{% url 'book-details' book.title %}">{{book.title}}</a></h4>
+                        <h4><a href="{% url 'book-details' book.slug %}">{{book.title}}</a></h4>
                         <ul class="prize d-flex">
                             <li>₹{{ book.price}}</li>
                             <li class="old_prize">{{book.discount}}</li>
@@ -149,7 +149,7 @@
                                 <ul class="add_to_links">
                                     <li><a class="cart" href="{% url 'add_cart' book.id %}"><i class="bi bi-shopping-bag4"></i></a></li>
                                     <li><a class="wishlist" href="{% url 'add_to_wishlist' book.id %}"><i
-                                                class="bi bi-shopping-cart-full"></i></a></li>
+                                                class="bi bi-love"></i></a></li>
                    
                                 </ul>
                             </div>
@@ -189,7 +189,7 @@
             <div class="col-3">
         <div class="product product__style--3">
             <div class="product__thumb"">
-                <a class="first__img" href="{% url 'book-details' book.title %}"><img src="{{book.image.first.url.url}}" alt="product image"></a>
+                <a class="first__img" href="{% url 'book-details' book.slug %}"><img src="{{book.image.first.url.url}}" alt="product image"></a>
             </div>
             <div class="product__content content--center">
                 <div class="action">
@@ -197,7 +197,7 @@
                         <ul class="add_to_links">
                             <li><a class="cart " href="{% url 'add_cart' book.id %}"><i class="bi bi-shopping-bag4"></i></a></li>
                             <li><a class="wishlist" href="{% url 'add_to_wishlist' book.id %}"><i
-                                        class="bi bi-shopping-cart-full"></i></a></li>
+                                        class="bi bi-love"></i></a></li>
                 
                         </ul>
                     </div>

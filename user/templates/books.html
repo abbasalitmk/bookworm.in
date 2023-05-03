@@ -124,10 +124,10 @@
 							<div class="col-lg-3 col-md-3 col-sm-6 col-12">
 								<div class="product">
 									<div class="product__thumb">
-										<a class="first__img" href="{% url 'book-details' book.title %}"><img
+										<a class="first__img" href="{% url 'book-details' book.slug %}"><img
 												src="{{image.url.url}}" alt="product image"></a>
 										<a class="second__img animation1"
-											href="{% url 'book-details' book.title %}"><img src="{{image.url.url}}"
+											href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
 												alt="product image"></a>
 										<div class="new__box">
 											<span class="new-label">Hot</span>
@@ -136,29 +136,21 @@
 											<li>₹{{ book.price}}</li>
 											<li class="old_prize">{{book.discount}}</li>
 										</ul>
-										<div class="action">
-											<div class="actions_inner">
-												<ul class="add_to_links">
-													<li><a class="cart" href="cart.html"></a></li>
-													<li><a class="wishlist" href="wishlist.html"></a></li>
-													<li><a class="compare" href="compare.html"></a></li>
-													<li><a data-toggle="modal" title="Quick View"
-															class="quickview modal-view detail-link"
-															href="#productmodal"></a></li>
-												</ul>
+										<div class="product__content text-center">
+											<div class="action">
+												<div class="actions_inner">
+													<ul class="add_to_links">
+														<li><a class="cart " href="{% url 'add_cart' book.id %}"><i class="bi bi-shopping-bag4"></i></a></li>
+														<li><a class="wishlist" href="{% url 'add_to_wishlist' book.id %}"><i
+																	class="bi bi-love"></i></a></li>
+										
+													</ul>
+												</div>
 											</div>
+										
 										</div>
 									</div>
-									<div class="product__content">
-										<h4><a href="{% url 'book-details' book.title %}">{{book.title}}</a></h4>
-										<ul class="rating d-flex">
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li class="on"><i class="fa fa-star-o"></i></li>
-											<li><i class="fa fa-star-o"></i></li>
-											<li><i class="fa fa-star-o"></i></li>
-										</ul>
-									</div>
+									
 								</div>
 							</div>
 							{% endfor %}

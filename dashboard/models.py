@@ -18,7 +18,7 @@ class Book_Category(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-
+    slug = models.SlugField(max_length=255, unique=True)
     discount = models.DecimalField(max_digits=8, decimal_places=2)
     publishing_date = models.DateField()
     description = models.TextField()
@@ -26,6 +26,19 @@ class Book(models.Model):
     language = models.CharField(max_length=60)
     stock = models.IntegerField()
     categories = models.ManyToManyField(Book_Category, related_name='books')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            # Check for existing slugs
+        existing_slugs = Book.objects.filter(
+            slug__startswith=self.slug).values_list('slug', flat=True)
+        if self.slug in existing_slugs:
+            i = 1
+            while f"{self.slug}-{i}" in existing_slugs:
+                i += 1
+            self.slug = f"{self.slug}-{i}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title

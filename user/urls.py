@@ -31,7 +31,7 @@ urlpatterns = [
 
     path('books/filter_price',
          views.filter_price, name='filter_price'),
-    path('books/detail/<str:title>', views.book_details, name='book-details'),
+    path('books/detail/<slug:slug>', views.book_details, name='book-details'),
     path('search', views.searchBook, name='search'),
     path('book_review/<int:book_id>', views.book_review, name='book_review'),
     path('password_change/', views.password_change_view, name='password_change'),

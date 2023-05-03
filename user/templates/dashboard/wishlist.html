@@ -34,9 +34,7 @@
                     <h5 class="text-center">Wishlist is empty</h5>
                     {% endif %}
                         {% for book in books %}
-                        
-                    
-                      
+                     
                         <div class="row">
                             <div class="col">
                                 <div class="card">
@@ -51,15 +49,15 @@
                                             </div>
                                             <div class="media-body my-auto text-center">
                                                 <div class="row  my-auto flex-column flex-md-row">
-                                                    <div class="col-5 my-auto">
+                                                    <div class="col-md-5 my-auto">
                                                         <h6 class="mb-0"> {{book.title}}</h6>
                                                     </div>
                                                     
                                                     
-                                                    <div class="col">
-                                                        <a href="{% url 'move_to_cart' book.id %}" class="btn btn-success text-white">Move to Cart</a>
+                                                    <div class="col mb-2">
+                                                        <a href="{% url 'move_to_cart' book.id %}" class="btn btn-info text-white"><i class="fa fa-cart-shopping"></i></a>
                                        
-                                                        <a href="{% url 'remove_from_wishlist' book.id %}" class="btn btn-danger text-white">Remove</a>
+                                                        <a href="{% url 'remove_from_wishlist' book.id %}" class="btn btn-danger text-white"><i class="fa fa-trash"></i></a>
                                                     </div>
                                                 </div>
                                             </div>

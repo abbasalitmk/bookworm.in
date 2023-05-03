@@ -180,7 +180,7 @@ RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID')
 
 RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET')
 
-S3_ENABLED = os.getenv('S3_ENABLED')
+S3_ENABLED = False  # os.getenv('S3_ENABLED')
 
 if S3_ENABLED:
     # amazone s3 configuration
