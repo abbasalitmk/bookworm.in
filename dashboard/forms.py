@@ -10,9 +10,9 @@ class BookForm(forms.ModelForm):
     #     widget=forms.CheckboxSelectMultiple
     # )
     variation_type = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'form-control mb-3', 'required': False}))
+        attrs={'class': 'form-control mb-3'}), required=False)
     variation_price = forms.DecimalField(widget=forms.NumberInput(
-        attrs={'class': 'form-control', 'required': False}))
+        attrs={'class': 'form-control'}), required=False)
     author_name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control'}))
     image = forms.ImageField(widget=forms.FileInput(
