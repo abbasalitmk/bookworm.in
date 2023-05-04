@@ -32,6 +32,7 @@
 								<button type="submit">Apply coupon</button>
 							</div>
 						</div>
+
 					</div>
 				</div>
 		</form>
@@ -156,8 +157,11 @@
 					</ul>
 					{% if coupon_discount %}
 
-					<ul class="shipping__method">
-						<li class="text-success"> Coupon Discount<span>₹{{coupon_discount}}</span></li>
+					<ul class="shipping__method ">
+						<li class="text-success"> Coupon Discount<span>₹{{coupon_discount}} </span><span><a
+									class='text-danger' href="{% url 'remove_coupon' %}"><i
+										class="fa fa-trash"></i></a></span></li>
+						<li></li>
 					</ul>
 					{% endif %}
 

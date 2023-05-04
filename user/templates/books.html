@@ -41,7 +41,7 @@
 						<h3 class="wedget__title">Filter by price</h3>
 						<div class="content-shopby">
 							<div class="price_filter s-filter clear">
-								<form action="{% url 'filter_price' %}" method="GET">
+								<form action="{% url 'books' %}" method="GET">
 								<div class="form-group row">
 									<label for="min-price" class="col-sm-4 col-form-label">Min. Price:</label>
 									<div class="col-sm-4">
@@ -89,7 +89,7 @@
 							<p>Showing <b>{{book_count}}</b> results</p>
 							<div class="orderby__wrapper">
 								<span>Sort By</span>
-								<form method="GET" action="" id="sort-form">
+								<form method="GET" action="{% url 'books' %}" id="sort-form">
 									<select class="shot__byselect form-control" name="sort" id="sort-option">
 										<option value="default">Default Sorting</option>
 										<option value="latest">Latest Books</option>
@@ -119,15 +119,14 @@
 
 							{% for book in books %}
 
-							{% for image in book.image.all %}
 
 							<div class="col-lg-3 col-md-3 col-sm-6 col-12">
 								<div class="product">
 									<div class="product__thumb">
 										<a class="first__img" href="{% url 'book-details' book.slug %}"><img
-												src="{{image.url.url}}" alt="product image"></a>
+												src="{{book.image.first.url.url}}" alt="product image"></a>
 										<a class="second__img animation1"
-											href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
+											href="{% url 'book-details' book.slug %}"><img src="{{book.image.first.url.url}}"
 												alt="product image"></a>
 										<div class="new__box">
 											<span class="new-label">Hot</span>
@@ -153,7 +152,6 @@
 									
 								</div>
 							</div>
-							{% endfor %}
 
 							{% endfor %}
 						</div>

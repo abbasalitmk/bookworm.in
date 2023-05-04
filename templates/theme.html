@@ -235,17 +235,15 @@
 					<div class="col-lg-12 d-none">
 						<nav class="mobilemenu__nav">
 							<ul class="meninmenu">
-								<li><a href="index.html">Home</a>
-
-								</li>
-								<li><a href="#">Pages</a>
-
-								</li>
-								<li><a href="shop-grid.html">Shop</a>
+								<li><a href="{% url 'home' %}">Home</a>
 
 								</li>
 
-								<li><a href="contact.html">Contact</a></li>
+								</li>
+								<li><a href="{% url 'books' %}">Books</a>
+
+								</li>
+
 							</ul>
 						</nav>
 					</div>
@@ -287,7 +285,7 @@
 						<div class="col-lg-12">
 							<div class="footer__widget footer__menu">
 								<div class="ft__logo">
-									<a href="index.html">
+									<a href="{% url 'home' %}">
 										<img src="{% static 'theme/logo.png' %}" alt="logo">
 									</a>
 
@@ -300,14 +298,7 @@
 										<li><a href="#"><i class="bi bi-linkedin"></i></a></li>
 										<li><a href="#"><i class="bi bi-youtube"></i></a></li>
 									</ul>
-									<ul class="mainmenu d-flex justify-content-center">
-										<li><a href="index.html">Trending</a></li>
-										<li><a href="index.html">Best Seller</a></li>
-										<li><a href="index.html">All Product</a></li>
-										<li><a href="index.html">Wishlist</a></li>
-										<li><a href="index.html">Blog</a></li>
-										<li><a href="index.html">Contact</a></li>
-									</ul>
+					
 								</div>
 							</div>
 						</div>
@@ -320,7 +311,7 @@
 						<div class="col-lg-6 col-md-6 col-sm-12">
 							<div class="copyright">
 								<div class="copy__right__inner text-left">
-									<p>Copyright <i class="fa fa-copyright"></i> <a href="#">Bookworm.</a> All Rights
+									<p>Copyright <i class="fa fa-copyright"></i> <a href="{% url 'home' %}">Bookworm.</a> All Rights
 										Reserved</p>
 								</div>
 							</div>
@@ -347,8 +338,8 @@
 	<script src="{% static 'theme/js/plugins.js' %}"></script>
 	<script src="{% static 'theme/js/active.js' %}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
+	<script src="{% static 'theme/js/zoom-image.js'%} "></script>
+	<script src="{% static 'theme/js/main.js'%}"></script>
 
 
 </body>

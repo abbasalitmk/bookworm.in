@@ -1,6 +1,46 @@
 ﻿{% extends 'theme.html' %}
 {% load static %}
 {% block 'content' %}
+<style>
+	.thumbnail {
+		margin-bottom: 10px;
+	}
+
+	.thumbnail img {
+		width: 100%;
+		cursor: pointer;
+	}
+
+	.main-image img {
+		width: 100%;
+		max-height: 500px;
+		object-fit: contain;
+		cursor: pointer;
+	}
+
+	@media (max-width: 767px) {
+		.main-image img {
+			max-height: 300px;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.main-image {
+			height: 500px;
+		}
+	}
+
+	.modal-content {
+		text-align: center;
+	}
+
+	.modal-content img {
+		max-width: 100%;
+		max-height: 500px;
+		object-fit: contain;
+	}
+</style>
+
 
 <!-- Start Bradcaump area -->
 <div id="carouselExampleIndicators" class="carousel slide" style='margin-top:15vh' data-ride="carousel">
@@ -46,16 +86,16 @@
 
 {% if messages %}
 
-	{% for message in messages %}
+{% for message in messages %}
 
-		<script>
-			toastr["{{message.tags}}"]("{{message}}");
-		</script>
+<script>
+	toastr["{{message.tags}}"]("{{message}}");
+</script>
 
-	{% endfor %}
+{% endfor %}
 
 {% endif %}
-	
+
 <!-- End Bradcaump area -->
 <!-- Start main Content -->
 <div class="maincontent bg--white pt--80 pb--55">
@@ -65,17 +105,68 @@
 				<div class="wn__single__product">
 
 					<div class="row">
-						<div class="col-lg-6 col-12">
-							<div class="wn__fotorama__wrapper">
-								<div class="fotorama wn__fotorama__action" data-nav="thumbs">
+						<div class="col-lg-6 col-md-12">
+							<!-- Product Gallery -->
+							<!-- Main Product Image -->
+							<div class="row">
+								<!-- Small Thumbnails -->
+								<div class="col-sm-3 d-none d-lg-block ">
+									<div class="row">
+										{% for image in books.image.all|slice:"1:" %}
+										<div class="col-12 m-2">
+											<a href="#" data-toggle="modal" data-target="#productGalleryModal">
+												<img src="{{ image.url.url }}" class="img-fluid rounded thumb-img">
+											</a>
+										</div>
+										{% endfor %}
+									</div>
+								</div>
+								<div class="col-sm-9 text-center">
+									<a href="#" data-toggle="modal" data-target="#productGalleryModal">
+										<img src="{{ books.image.first.url.url }}" width="80%"
+											class="img-fluid rounded main-img">
+									</a>
+								</div>
 
-									{% for image in books.image.all %}
+							</div>
 
-									<a href="1.jpg"><img src="{{image.url.url}}" alt=""></a>
-									{% endfor %}
+							<!-- Small Thumbnails for Mobile View -->
+							<div class="row d-lg-none">
+								<div class="col-12">
+									<div class="row">
+										{% for image in books.image.all|slice:"1:" %}
+										<div class="col-4 m-2">
+											<a href="#" data-toggle="modal" data-target="#productGalleryModal">
+												<img src="{{ image.url.url }}" class="img-fluid rounded thumb-img">
+											</a>
+										</div>
+										{% endfor %}
+									</div>
 								</div>
 							</div>
+
+
+
+
+							<!-- Product Gallery Modal -->
+							<div class="modal fade" id="productGalleryModal" tabindex="-1" role="dialog"
+								aria-labelledby="productGalleryModalLabel" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered modal-xl"
+									style="max-width:50vw; max-height:90vh" role="document">
+									<div class="modal-content">
+										<div class="modal-body">
+											<img height="100%" width="100%" src="" class="img-fluid rounded modal-img">
+										</div>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								</div>
+							</div>
+
 						</div>
+
+
 
 						<div class="col-lg-6 col-12">
 							<div class="product__info__main">
@@ -106,13 +197,13 @@
 										<strong class="text-primary">PAPERBACK</strong>
 										<span>Rs. {{ books.price}}</span>
 									</div>
-									
-									{% if books.book_variation.first %}										
-										<div class="variation_price">
-											<strong class="text-primary">E-BOOK</strong>
-											<span>Rs. {{ books.book_variation.first.price}}</span>
-										</div>
-									
+
+									{% if books.book_variation.first %}
+									<div class="variation_price">
+										<strong class="text-primary">E-BOOK</strong>
+										<span>Rs. {{ books.book_variation.first.price}}</span>
+									</div>
+
 
 									<div class="product-color-label">
 										<div class="color__attribute d-flex">
@@ -121,12 +212,13 @@
 												<select name="type" class="form-control" id="">
 													<option value="" desabled selected>Choose a option</option>
 													{% for variation in books.book_variation.all %}
-													<option value="{{ variation.variation_type }}">{{variation.variation_type }}</option>
+													<option value="{{ variation.variation_type }}">
+														{{variation.variation_type }}</option>
 													{% endfor %}
 												</select>
 											</div>
 										</div>
-										
+
 									</div>
 									{% endif %}
 									<div class="box-tocart d-flex">
@@ -169,32 +261,32 @@
 						</div>
 						<!-- End Single Tab Content -->
 						<!-- Start Single Tab Content -->
-						
-						
+
+
 						<div class="pro__tab_label tab-pane fade" id="nav-review" role="tabpanel">
 							<h3>Customer Reviews</h3>
 
 							{% for review in books.review.all %}
 
 							<div class="review__attribute m-3">
-								
+
 								<h4>{{review.title}}</h4>
 								<p>{{review.review_text}}</p>
 								<b>Review by: {{review.user.first_name}}</b>
-							
+
 							</div>
 							{% endfor %}
-							
+
 							{% if request.user.is_authenticated %}
-								
-							
+
+
 							<form action="{% url 'book_review' books.id %}" method="POST">
 								{% csrf_token %}
-							<div class="review-fieldset col-6">
-								<h2>Write Review</h2>
-								<div class="review-field-ratings">
-									<div class="product-review-table">
-										<!-- <div class="review-field-rating d-flex">
+								<div class="review-fieldset col-6">
+									<h2>Write Review</h2>
+									<div class="review-field-ratings">
+										<div class="product-review-table">
+											<!-- <div class="review-field-rating d-flex">
 											<span>Quality</span>
 											<ul class="rating d-flex">
 												<li class="off"><i class="zmdi zmdi-star"></i></li>
@@ -205,23 +297,23 @@
 											</ul>
 										</div> -->
 
-					
+
+										</div>
+									</div>
+									<div class="review_form_field">
+										<div class="input__box">
+											<span>Summary</span>
+											{{form.title}}
+										</div>
+										<div class="input__box">
+											<span>Review</span>
+											{{form.review_text}}
+										</div>
+										<div class="review-form-actions">
+											<button type='submit'>Submit Review</button>
+										</div>
 									</div>
 								</div>
-								<div class="review_form_field">
-									<div class="input__box">
-										<span>Summary</span>
-										{{form.title}}
-									</div>
-									<div class="input__box">
-										<span>Review</span>
-										{{form.review_text}}
-									</div>
-									<div class="review-form-actions">
-										<button type='submit'>Submit Review</button>
-									</div>
-								</div>
-							</div>
 							</form>
 							{% else %}
 							<a href="">You must signin for write review</a>
@@ -231,26 +323,33 @@
 						<!-- End Single Tab Content -->
 					</div>
 				</div>
-			
+
 			</div>
-			
+
 		</div>
 	</div>
 </div>
 <!-- End main Content -->
-<!-- Start Search Popup -->
-<div class="box-search-content search_active block-bg close__top">
-	<form id="search_mini_form--2" class="minisearch" action="#">
-		<div class="field__search">
-			<input type="text" placeholder="Search entire store here...">
-			<div class="action">
-				<a href="#"><i class="zmdi zmdi-search"></i></a>
-			</div>
-		</div>
-	</form>
-	<div class="close__wrap">
-		<span>close</span>
-	</div>
-</div>
-<!-- End Search Popup -->
+
+<script>
+	$(document).ready(function () {
+		// Set the main image as the first image in the list
+		var mainImgSrc = $(".main-img").attr("src");
+		$(".modal-img").attr("src", mainImgSrc);
+
+		// Handle click events for thumbnail images
+		$(".thumb-img").click(function (e) {
+			e.preventDefault();
+			var thumbImgSrc = $(this).attr("src");
+			$(".modal-img").attr("src", thumbImgSrc);
+		});
+
+		// Reset the modal image to the main image when the modal is hidden
+		$("#productGalleryModal").on("hidden.bs.modal", function () {
+			$(".modal-img").attr("src", mainImgSrc);
+		});
+	});
+</script>
+
+
 {% endblock 'content' %}

@@ -30,21 +30,40 @@ def home(request):
     return render(request, 'home.html', {'books': books})
 
 
-def list_book(request,):
-    # books = Book.objects.filter(category__cat_name=cat_name)
+def list_book(request):
+    # Get filter parameters
+    cat_name = request.GET.get('category')
+    min_price = request.GET.get('min-price')
+    max_price = request.GET.get('max-price')
+
+    # Get sort parameter
     sort = request.GET.get('sort')
-    if sort == 'latest':
-        books = Book.objects.all().order_by('publishing_date')
-    elif sort == 'price-low':
-        books = Book.objects.all().order_by('price')
-    elif sort == 'price-high':
-        books = Book.objects.all().order_by('-price')
-    elif sort == 'name':
-        books = Book.objects.all().order_by('title')
-    elif sort == 'default':
-        books = Book.objects.all().order_by('id')
+
+    # Filter books based on category
+    if cat_name:
+        if min_price or max_price:
+            books = Book.objects.filter(
+                categories__name=cat_name, price__gte=min_price, price__lte=max_price)
+        else:
+            books = Book.objects.filter(categories__name=cat_name)
     else:
-        books = Book.objects.all().order_by('id')
+        if min_price or max_price:
+            books = Book.objects.filter(
+                price__gte=min_price, price__lte=max_price)
+        else:
+            books = Book.objects.all()
+
+    # Sort books based on user input
+    if sort == 'latest':
+        books = books.order_by('publishing_date')
+    elif sort == 'price-low':
+        books = books.order_by('price')
+    elif sort == 'price-high':
+        books = books.order_by('-price')
+    elif sort == 'name':
+        books = books.order_by('title')
+    else:
+        books = books.order_by('id')
 
     paginator = Paginator(books, 6)
     page = request.GET.get('page')
@@ -57,8 +76,11 @@ def list_book(request,):
     context = {
         'books': paged_product,
         'category': categories,
-        'book_count': book_count
-
+        'book_count': book_count,
+        'selected_category': cat_name,
+        'min_price': min_price,
+        'max_price': max_price,
+        'selected_sort': sort
     }
     return render(request, 'books.html', context)
 

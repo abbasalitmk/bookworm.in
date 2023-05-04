@@ -31,7 +31,6 @@ def order_now(request):
     return HttpResponse(address)
 
 
-@csrf_exempt
 @ login_required(login_url='login')
 def place_order(request, total=0, quantity=0, cart_items=None, delivery_charge=0, sub_total=0):
 

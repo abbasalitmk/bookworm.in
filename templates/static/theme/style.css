@@ -8811,7 +8811,7 @@ a.checkout__title {
   }
 
   .maincontent {
-    padding-bottom: 80px;
+    padding-bottom:   80px;
   }
 }
 
@@ -8819,3 +8819,4 @@ a.checkout__title {
 .form-gap {
   padding-top: 70px;
 }
+

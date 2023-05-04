@@ -31,6 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
+S3_ENABLED = os.getenv('S3_ENABLED')
 
 ALLOWED_HOSTS = ['*']
 
@@ -179,8 +180,6 @@ TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID')
 
 RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET')
-
-S3_ENABLED = os.getenv('S3_ENABLED')
 
 if S3_ENABLED:
     # amazone s3 configuration

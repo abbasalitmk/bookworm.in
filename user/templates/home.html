@@ -64,16 +64,14 @@
      
             {% for book in books %}
 
-                {% for image in book.image.all  %}
-
-                     
+                   
             <div class="product product__style--3">
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="product__thumb">
                         <a class="first__img" href={% url 'book-details' book.slug %}><img
-                                src="{{image.url.url}}" alt="product image"></a>
+                                src="{{book.image.first.url.url}}" alt="product image"></a>
                         <a class="second__img animation1" href={% url 'book-details' book.slug %}><img
-                                src="{{image.url.url}}" alt="product image"></a>
+                                src="{{book.image.first.url.url}}" alt="product image"></a>
                         <div class="hot__box">
                             <span class="hot-label">BEST SELLER</span>
                         </div>
@@ -98,7 +96,6 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
             {% endfor %}
         </div>
     </div>
@@ -125,16 +122,12 @@
             
             {% if book.discount > 0 %}
                 
-            
-            {% for image in book.image.all %}
-
-
             <div class="product product__style--3">
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                     <div class="product__thumb">
-                        <a class="first__img" href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
+                        <a class="first__img" href="{% url 'book-details' book.slug %}"><img src="{{book.image.first.url.url}}"
                                 alt="product image"></a>
-                        <a class="second__img animation1" href="{% url 'book-details' book.slug %}"><img src="{{image.url.url}}"
+                        <a class="second__img animation1" href="{% url 'book-details' book.slug %}"><img src="{{book.image.first.image.url.url}}"
                                 alt="product image"></a>
                     
                     </div>
@@ -158,7 +151,6 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
             {% endif %}
                 
 

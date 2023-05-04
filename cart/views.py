@@ -296,6 +296,17 @@ def apply_coupon(request):
 
 
 @login_required(login_url='login')
+def remove_coupon(request):
+    try:
+        del request.session['discount']
+        messages.success(request, 'Coupon removed')
+    except:
+        messages.error(request, 'No coupon to remove')
+
+    return redirect(reverse('checkout'))
+
+
+@login_required(login_url='login')
 def add_to_wishlist(request, books_id):
     user = request.user
     book = Book.objects.get(id=books_id)
