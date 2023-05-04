@@ -213,13 +213,13 @@
 									
 									
 									<div class="price-box">
-										<strong class="text-primary">PAPERBACK</strong>
+										<strong class="text-primary">{{book.book_type}}</strong>
 										<span>Rs. {{ books.price}}</span>
 									</div>
 
 									{% if books.book_variation.first.variation_type %}
 									<div class="variation_price">
-										<strong class="text-primary">E-BOOK</strong>
+										<strong class="text-primary">{{books.book_variation.first.variation_type}}</strong>
 										<span>Rs. {{ books.book_variation.first.price}}</span>
 									</div>
 
