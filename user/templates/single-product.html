@@ -111,7 +111,7 @@
 							<div class="row">
 								<!-- Small Thumbnails -->
 								
-								{% if books.image.all|slice:"1:" %}
+								{% if books.image.count > 1 %}
 								
 									
 								<div class="col-sm-3 d-none d-lg-block ">
@@ -136,7 +136,7 @@
 							</div>
 
 							<!-- Small Thumbnails for Mobile View -->
-							{% if books.image.all|slice:"1:" %}
+							{% if books.image.count > 1 %}
 							<div class="row d-lg-none">
 								<div class="col-12">
 									<div class="row">
