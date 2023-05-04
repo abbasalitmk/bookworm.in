@@ -176,29 +176,37 @@
 								<form action="{% url 'add_cart' books.id %}" method="POST">
 									{% csrf_token %}
 									<h1>{{books.title}}</h1>
-									<div class="product-info-stock-sku d-flex">
-										<p>Availability:<span> In stock</span></p>
-										<p>SKU:<span> MH01</span></p>
-									</div>
-									<div class="product-reviews-summary d-flex">
-										<ul class="rating-summary d-flex">
-											<li><i class="zmdi zmdi-star-outline"></i></li>
-											<li><i class="zmdi zmdi-star-outline"></i></li>
-											<li><i class="zmdi zmdi-star-outline"></i></li>
-											<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
-											<li class="off"><i class="zmdi zmdi-star-outline"></i></li>
-										</ul>
-										<div class="reviews-actions d-flex">
-											<a href="#">(1 Review)</a>
-											<a href="#">Add Your Review</a>
+									
+									{% if books.stock > 0 %}
+										<div class="product-info-stock-sku d-flex">
+											<p>Availability:<span> In stock</span></p>
+											
 										</div>
+									{% endif %}
+									<div class="product-info-stock-sku d-flex">
+										<p>Author:<span> {{books.author.first.name}}</span></p>
 									</div>
+									<div class="product-info-stock-sku d-flex">
+										<p>Language:<span> {{books.language}}</span></p>
+									</div>
+									<div class="product-info-stock-sku d-flex">
+										<p>Book Type:<span> {{books.book_type}}</span></p>
+									</div>
+									<div class="product-info-stock-sku d-flex">
+										<p>Publishing Date:<span> {{books.publishing_date}}</span></p>
+									</div>
+									<div class="product-info-stock-sku d-flex">
+										<p>Category<span> {{books.categories.first.name}}</span></p>
+									</div>
+										
+									
+									
 									<div class="price-box">
 										<strong class="text-primary">PAPERBACK</strong>
 										<span>Rs. {{ books.price}}</span>
 									</div>
 
-									{% if books.book_variation.first %}
+									{% if books.book_variation.first.variation_type %}
 									<div class="variation_price">
 										<strong class="text-primary">E-BOOK</strong>
 										<span>Rs. {{ books.book_variation.first.price}}</span>
