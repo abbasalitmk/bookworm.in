@@ -5,7 +5,7 @@ from .forms import BookForm, CategoryForm, CouponForm
 from accounts.models import CustomUser as User
 from django.shortcuts import get_object_or_404
 from django.db.models import Count, Sum
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.db.models import Q
 
@@ -19,7 +19,11 @@ from django.db.models.functions import ExtractMonth, ExtractYear
 from django.db.models.functions import TruncMonth
 from django.utils import timezone
 
+login_required()
 
+
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def dashboard_home(request):
 
     orders = Order.objects.all()
@@ -90,6 +94,8 @@ def dashboard_home(request):
     return render(request, 'dashboard/index.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def product_list(request):
     books = Book.objects.all().order_by('-id')
 
@@ -115,6 +121,8 @@ def product_list(request):
     return render(request, 'dashboard/product_list.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def search_books(request):
 
     if 'keyword' in request.GET:
@@ -128,6 +136,8 @@ def search_books(request):
     return render(request, 'dashboard/product_list.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def product_grid(request):
     books = Book.objects.all().order_by('-id')
     context = {
@@ -136,6 +146,8 @@ def product_grid(request):
     return render(request, 'dashboard/product_grid.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def orders(request):
     status_choices = Order.STATUS
     form = GetYear()
@@ -159,6 +171,8 @@ def orders(request):
     return render(request, 'dashboard/orders.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def payment(request):
     orders = Order.objects.all()
     context = {
@@ -168,6 +182,8 @@ def payment(request):
     return render(request, 'dashboard/payment.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
@@ -209,6 +225,8 @@ def add_book(request):
     return render(request, 'dashboard/add_book.html', {'book_form': form})
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     categories = Book_Category.objects.all()
@@ -282,12 +300,16 @@ def edit_book(request, book_id):
     return render(request, 'dashboard/edit_book.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def delete_book(request, book_id):
     book = Book.objects.get(id=book_id)
     book.delete()
     return redirect('books_list')
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def order_details(request, order_number):
     order = Order.objects.filter(order_number=order_number)
     order_products = OrderProduct.objects.filter(
@@ -299,6 +321,8 @@ def order_details(request, order_number):
     return render(request, 'dashboard/order_details.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def users(request):
     users = User.objects.all()
     context = {
@@ -307,6 +331,8 @@ def users(request):
     return render(request, 'dashboard/users.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def user_status(request, user_id):
     user = User.objects.get(id=user_id)
     if user.is_active:
@@ -319,6 +345,8 @@ def user_status(request, user_id):
         return redirect('users')
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def categories(request):
     categories = Book_Category.objects.annotate(
         total_books=Count('books'))
@@ -336,12 +364,16 @@ def categories(request):
     return render(request, 'dashboard/categories.html', {'form': form, 'categories': categories})
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def delete_category(request, cat_id):
     category = Book_Category.objects.get(id=cat_id)
     category.delete()
     return redirect('categories')
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def edit_category(request, cat_id):
     categories = Book_Category.objects.annotate(
         total_books=Count('books'))
@@ -357,6 +389,8 @@ def edit_category(request, cat_id):
     return render(request, 'dashboard/categories.html', {'form': form, 'categories': categories})
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def coupons(request):
     coupons = Coupon.objects.all()
     context = {
@@ -365,7 +399,8 @@ def coupons(request):
     return render(request, 'dashboard/coupons.html', context)
 
 
-@ login_required(login_url='login')
+@user_passes_test(lambda user: user.is_staff, login_url='login')
+@login_required(login_url='login')
 def add_coupon(request):
     if request.method == 'POST':
         form = CouponForm(request.POST)
@@ -380,6 +415,7 @@ def add_coupon(request):
     return render(request, 'dashboard/add_coupon.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
 @ login_required(login_url='login')
 def delete_coupon(request, coupon_id):
     coupon = Coupon.objects.get(id=coupon_id)
@@ -387,6 +423,7 @@ def delete_coupon(request, coupon_id):
     return redirect('coupons')
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
 @ login_required(login_url='login')
 def change_status(request, order_number):
     if request.method == 'POST':
@@ -401,6 +438,7 @@ def change_status(request, order_number):
         return redirect('orders')
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
 @ login_required(login_url='login')
 def search_order(request):
     status_choices = Order.STATUS
@@ -417,6 +455,7 @@ def search_order(request):
     return render(request, 'dashboard/orders.html', context)
 
 
+@user_passes_test(lambda user: user.is_staff, login_url='login')
 @ login_required(login_url='login')
 def sales_report(request):
 
