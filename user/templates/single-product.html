@@ -110,6 +110,10 @@
 							<!-- Main Product Image -->
 							<div class="row">
 								<!-- Small Thumbnails -->
+								
+								{% if books.image.all|slice:"1:" %}
+								
+									
 								<div class="col-sm-3 d-none d-lg-block ">
 									<div class="row">
 										{% for image in books.image.all|slice:"1:" %}
@@ -121,6 +125,7 @@
 										{% endfor %}
 									</div>
 								</div>
+								{% endif %}
 								<div class="col-sm-9 text-center">
 									<a href="#" data-toggle="modal" data-target="#productGalleryModal">
 										<img src="{{ books.image.first.url.url }}" width="80%"
@@ -131,6 +136,7 @@
 							</div>
 
 							<!-- Small Thumbnails for Mobile View -->
+							{% if books.image.all|slice:"1:" %}
 							<div class="row d-lg-none">
 								<div class="col-12">
 									<div class="row">
@@ -144,6 +150,7 @@
 									</div>
 								</div>
 							</div>
+							{% endif %}
 
 
 
