@@ -77,6 +77,17 @@
 										</div>
 									
 									</div>
+									<div class="mb-3 row">
+										<div class="col-7">
+											<label for="inputProductDescription" class="form-label">Product Images</label>
+											{{ book_form.image2 }}
+									
+										</div>
+										<div class="col-4">
+											<img id="preview2" src="{{image2}}" alt="Image Preview" style="max-width:100px; max-height:120px;">
+										</div>
+									
+									</div>
 									<div class="row">
 										
 										<div class="col-md-6">
@@ -162,10 +173,14 @@
 <!-- js scripts -->
 
 <script>
-	function previewImage(event) {
+	function previewImage1(event) {
 		let preview = document.getElementById('preview');
 		preview.src = URL.createObjectURL(event.target.files[0]);
 	}
+		function previewImage2(event) {
+				let preview = document.getElementById('preview2');
+				preview.src = URL.createObjectURL(event.target.files[0]);
+			}
 </script>
 
 {% endblock 'content' %}

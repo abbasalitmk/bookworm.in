@@ -34,7 +34,6 @@
                     <h5 class="text-center">Wishlist is empty</h5>
                     {% endif %}
                         {% for book in books %}
-                     
                         <div class="row">
                             <div class="col">
                                 <div class="card">
@@ -52,9 +51,7 @@
                                                     <div class="col-md-5 my-auto">
                                                         <h6 class="mb-0"> {{book.title}}</h6>
                                                     </div>
-                                                    
-                                                    
-                                                    <div class="col mb-2">
+                                                   <div class="col mb-2">
                                                         <a href="{% url 'move_to_cart' book.id %}" class="btn btn-info text-white"><i class="fa fa-cart-shopping"></i></a>
                                        
                                                         <a href="{% url 'remove_from_wishlist' book.id %}" class="btn btn-danger text-white"><i class="fa fa-trash"></i></a>
@@ -68,7 +65,6 @@
                             </div>
                         </div>
                         {% endfor %}
-
                     </div>
             </main>
         </div> <!-- row.// -->

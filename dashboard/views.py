@@ -213,6 +213,11 @@ def add_book(request):
                 book=book,
                 url=image
             )
+            image2 = form.cleaned_data['image2']
+            Image.objects.create(
+                book=book,
+                url=image2
+            )
 
             # Add the categories to the book
             categories = form.cleaned_data['categories']

@@ -16,7 +16,9 @@ class BookForm(forms.ModelForm):
     author_name = forms.CharField(widget=forms.TextInput(
         attrs={'class': 'form-control'}))
     image = forms.ImageField(widget=forms.FileInput(
-        attrs={'class': 'form-control', 'onchange': 'previewImage(event)'}))
+        attrs={'class': 'form-control', 'onchange': 'previewImage1(event)'}))
+    image2 = forms.ImageField(widget=forms.FileInput(
+        attrs={'class': 'form-control', 'onchange': 'previewImage2(event)'}), required=False)
 
     class Meta:
         model = Book
