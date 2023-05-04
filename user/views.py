@@ -65,7 +65,7 @@ def list_book(request):
     else:
         books = books.order_by('id')
 
-    paginator = Paginator(books, 6)
+    paginator = Paginator(books, 10)
     page = request.GET.get('page')
     paged_product = paginator.get_page(page)
     book_count = books.count()
